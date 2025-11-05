@@ -1,0 +1,113 @@
+﻿.header {
+  background-color: white;
+  border-bottom: 2px solid #F5F5F5;
+  padding: 24px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: opacity 0.3s ease;
+}
+
+.logo:hover {
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.logoImage {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+.nav {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.btnAnunciar {
+  background-color: var(--color-accent);
+  color: white;
+  padding: 14px 28px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+  font-size: 16px;
+}
+
+.btnAnunciar:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.btnSair {
+  background-color: transparent;
+  color: var(--color-text-light);
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnLogin, .btnCadastro {
+  padding: 14px 28px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+  font-size: 16px;
+}
+
+.btnLogin {
+  color: var(--color-text);
+}
+
+.btnCadastro {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.btnCadastro:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
+.btnPerfil {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #F5F5F5;
+  transition: all 0.3s ease;
+  padding: 8px;
+}
+
+.btnPerfil:hover {
+  background-color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+.profileIcon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}

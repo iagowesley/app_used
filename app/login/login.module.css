@@ -1,0 +1,57 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+  padding: 20px;
+}
+
+.loadingContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 70vh;
+}
+
+.formCard {
+  background-color: white;
+  border-radius: var(--border-radius-large);
+  padding: 48px;
+  max-width: 480px;
+  width: 100%;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-text);
+  margin-bottom: 8px;
+  text-align: center;
+  text-transform: lowercase;
+}
+
+.subtitle {
+  font-size: 16px;
+  color: var(--color-text-light);
+  text-align: center;
+  margin-bottom: 32px;
+  text-transform: lowercase;
+}
+
+.form {
+  margin-bottom: 24px;
+}
+
+.cadastroLink {
+  text-align: center;
+  color: var(--color-text-light);
+  font-size: 14px;
+  text-transform: lowercase;
+}
+
+.cadastroLink a {
+  color: var(--color-accent);
+  font-weight: 600;
+}
+

@@ -1,0 +1,44 @@
+﻿// Cliente do Supabase configurado para uso no frontend
+import { createClient } from '@supabase/supabase-js';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+if (!supabaseUrl) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing. Please check your .env.local file');
+}
+
+if (!supabaseAnonKey) {
+  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is missing. Please check your .env.local file');
+}
+
+// Cliente para uso no CLIENT-SIDE (com RLS)
+export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+
+// Cliente para uso no SERVER-SIDE (API Routes) - BYPASSA RLS
+// Use este cliente nas rotas API para evitar problemas com RLS
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+export const supabaseAdmin = supabaseServiceKey 
+  ? createClient(supabaseUrl, supabaseServiceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
+      }
+    })
+  : supabase;
+
+// Tipos para o banco de dados
+export interface Produto {
+  id: number;
+  user_id: string;
+  nome: string;
+  descricao: string;
+  preco: number;
+  imagens: string[]; // Array de URLs das imagens
+  whatsapp: string; // Número do WhatsApp
+  categoria: string; // Categoria do produto
+  condicao: string; // Condição do produto (novo, seminovo, usado)
+  formas_pagamento: string[]; // Formas de pagamento aceitas
+  created_at?: string;
+}

@@ -1,0 +1,300 @@
+﻿/* Hero Section */
+.heroSection {
+  background: linear-gradient(135deg, #FF7A00 0%, #FF9E40 100%);
+  padding: 80px 0;
+  margin-bottom: 48px;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroContent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  align-items: center;
+  position: relative;
+  z-index: 1;
+}
+
+.heroText {
+  text-align: left;
+}
+
+.heroTitle {
+  font-size: 72px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: lowercase;
+  letter-spacing: -2px;
+}
+
+.heroSubtitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  text-transform: lowercase;
+  opacity: 0.95;
+}
+
+.heroDescription {
+  font-size: 18px;
+  line-height: 1.8;
+  text-transform: lowercase;
+  opacity: 0.9;
+}
+
+/* Elementos Decorativos */
+.decorativeElements {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 50%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.decorativeElementsLeft {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 30%;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floatingIcon {
+  position: absolute;
+  font-size: 48px;
+  animation: float 6s ease-in-out infinite;
+  opacity: 0.25;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
+}
+
+.geometricShape {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  transform: rotate(45deg);
+  animation: rotate 15s linear infinite;
+}
+
+.geometricShapeLeft {
+  position: absolute;
+  width: 70px;
+  height: 70px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+  animation: rotateReverse 20s linear infinite;
+}
+
+.priceTag {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  padding: 12px 20px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  animation: pulse 3s ease-in-out infinite;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-20px) rotate(5deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-5deg);
+  }
+  75% {
+    transform: translateY(-25px) rotate(3deg);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(45deg);
+  }
+  to {
+    transform: rotate(405deg);
+  }
+}
+
+@keyframes rotateReverse {
+  from {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(-180deg) scale(1.1);
+  }
+  to {
+    transform: rotate(-360deg) scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 768px) {
+  .heroSection {
+    padding: 48px 20px;
+    min-height: 400px;
+  }
+  
+  .heroContent {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  
+  .heroText {
+    text-align: center;
+    position: relative;
+    z-index: 2;
+  }
+  
+  .heroTitle {
+    font-size: 48px;
+  }
+  
+  .heroSubtitle {
+    font-size: 18px;
+  }
+  
+  .heroDescription {
+    font-size: 16px;
+  }
+  
+  .decorativeElements {
+    width: 100%;
+    opacity: 0.4;
+  }
+  
+  .decorativeElementsLeft {
+    width: 100%;
+    opacity: 0.3;
+  }
+  
+  .floatingIcon {
+    font-size: 32px;
+  }
+  
+  .geometricShape {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .geometricShapeLeft {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .priceTag {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+.header {
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: var(--color-text);
+  text-transform: lowercase;
+}
+
+.searchInput {
+  max-width: 400px;
+}
+
+/* Filtros de Categoria */
+.filterContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  border: 1px solid #e9ecef;
+}
+
+.filterButton {
+  padding: 10px 20px;
+  background-color: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: lowercase;
+}
+
+.filterButton:hover {
+  background-color: #fff5ec;
+  border-color: #FF7A00;
+  color: #FF7A00;
+}
+
+.filterButtonActive {
+  background-color: #FF7A00;
+  border-color: #FF7A00;
+  color: white;
+}
+
+.filterButtonActive:hover {
+  background-color: #e66d00;
+  border-color: #e66d00;
+}
+
+@media (max-width: 768px) {
+  .filterContainer {
+    padding: 16px;
+    gap: 8px;
+  }
+  
+  .filterButton {
+    padding: 8px 16px;
+    font-size: 13px;
+  }
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.empty {
+  text-align: center;
+  color: var(--color-text-light);
+  font-size: 18px;
+  margin-top: 80px;
+  text-transform: lowercase;
+}
