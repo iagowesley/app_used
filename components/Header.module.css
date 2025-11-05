@@ -111,3 +111,28 @@
   height: 24px;
   object-fit: contain;
 }
+
+/* Media Query para Mobile */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 12px;
+  }
+
+  .logoImage {
+    height: 36px;
+  }
+
+  .nav {
+    gap: 8px;
+  }
+
+  .btnLogin, .btnCadastro {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .btnAnunciar {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+}

@@ -122,6 +122,11 @@ a:hover {
   grid-auto-rows: 1fr;
 }
 
+.products-grid > * {
+  display: flex;
+  min-height: 0;
+}
+
 @media (max-width: 768px) {
   .products-grid {
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));

@@ -21,7 +21,7 @@ export default function ProductCard({ produto }: ProductCardProps) {
             src={produto.imagens[0]}
             alt={produto.nome}
             fill
-            style={{ objectFit: 'cover', objectPosition: 'center' }}
+            style={{ objectFit: 'contain', objectPosition: 'center' }}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             priority={false}
           />
@@ -54,7 +54,7 @@ export default function ProductCard({ produto }: ProductCardProps) {
             <span className={styles.tagPagamento}>
               {produto.formas_pagamento.length === 1 
                 ? getFormaPagamentoLabel(produto.formas_pagamento[0])
-                : `${produto.formas_pagamento.length} formas`
+                : `${produto.formas_pagamento.length} formas de pagamento`
               }
             </span>
           )}

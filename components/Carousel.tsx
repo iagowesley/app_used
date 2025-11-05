@@ -44,7 +44,7 @@ export default function Carousel({ imagens, alt, height = 300 }: CarouselProps) 
           src={imagens[indiceAtual]}
           alt={`${alt} - imagem ${indiceAtual + 1}`}
           fill
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: 'contain' }}
           priority={indiceAtual === 0}
         />
       </div>

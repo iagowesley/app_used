@@ -135,7 +135,7 @@ export default function ProdutoDetalhes() {
             className={styles.deleteButton}
           >
             {isAdminUser && !isProprietario && <span className={styles.adminBadge}>ADMIN</span>}
-            × deletar anúncio
+            deletar anúncio
           </button>
         )}
       </div>
