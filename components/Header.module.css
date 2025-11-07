@@ -1,7 +1,7 @@
 ﻿.header {
   background-color: white;
   border-bottom: 2px solid #F5F5F5;
-  padding: 24px 0;
+  padding: 10px 0;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -29,7 +29,7 @@
 }
 
 .logoImage {
-  height: 48px;
+  height: 70px;
   width: auto;
   object-fit: contain;
 }
@@ -90,25 +90,23 @@
 }
 
 .btnPerfil {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #F5F5F5;
+  background-color: transparent;
   transition: all 0.3s ease;
-  padding: 8px;
+  padding: 0;
+  border: none;
 }
 
 .btnPerfil:hover {
-  background-color: var(--color-accent);
   transform: scale(1.05);
+  opacity: 0.8;
 }
 
 .profileIcon {
-  width: 24px;
-  height: 24px;
+  width: 40px;
+  height: 40px;
   object-fit: contain;
 }
 
@@ -119,7 +117,7 @@
   }
 
   .logoImage {
-    height: 36px;
+    height: 53px;
   }
 
   .nav {

@@ -24,6 +24,7 @@ export default function NovoAnuncio() {
   const [categoria, setCategoria] = useState('');
   const [condicao, setCondicao] = useState('');
   const [formasPagamento, setFormasPagamento] = useState<string[]>([]);
+  const [fazEntrega, setFazEntrega] = useState(false);
   const [imagens, setImagens] = useState<File[]>([]);
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -205,6 +206,7 @@ export default function NovoAnuncio() {
             categoria: categoria,
             condicao: condicao,
             formas_pagamento: formasPagamento,
+            faz_entrega: fazEntrega,
           },
         ]);
 
@@ -424,6 +426,26 @@ export default function NovoAnuncio() {
                     </label>
                   ))}
                 </div>
+              </div>
+
+              {/* Opção de Entrega - Full Width */}
+              <div className={`form-group ${styles.fieldFullWidth}`}>
+                <label className={styles.checkboxLabel} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <input
+                    type="checkbox"
+                    checked={fazEntrega}
+                    onChange={(e) => setFazEntrega(e.target.checked)}
+                    disabled={loading}
+                    className={styles.checkbox}
+                    style={{ width: 'auto' }}
+                  />
+                  <span className={styles.checkboxText} style={{ fontSize: '16px', fontWeight: '500' }}>
+                     faço entrega do produto
+                  </span>
+                </label>
+                <small className={styles.hint} style={{ marginLeft: '32px' }}>
+                  marque esta opção se você faz entrega do produto
+                </small>
               </div>
             </div>
 

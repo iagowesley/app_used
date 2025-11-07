@@ -182,6 +182,15 @@ export default function ProdutoDetalhes() {
             </div>
           )}
 
+          {/* Informação de Entrega */}
+          {produto.faz_entrega && (
+            <div className={styles.entregaSection}>
+              <span className={styles.tagEntrega}>
+                 vendedor faz entrega
+              </span>
+            </div>
+          )}
+
           <div className={styles.descricaoContainer}>
             <h2 className={styles.subtitle}>descrição</h2>
             <p className={styles.descricao}>{produto.descricao}</p>

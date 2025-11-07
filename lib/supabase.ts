@@ -40,5 +40,20 @@ export interface Produto {
   categoria: string; // Categoria do produto
   condicao: string; // Condição do produto (novo, seminovo, usado)
   formas_pagamento: string[]; // Formas de pagamento aceitas
+  faz_entrega: boolean; // Se o vendedor faz entrega
   created_at?: string;
+}
+
+export interface Pedido {
+  id: number;
+  produto_id: number | null;
+  payment_id: string;
+  status: string;
+  valor: number;
+  payer_email: string | null;
+  external_reference: string | null;
+  data_pagamento: string;
+  created_at: string;
+  updated_at: string;
+  produto?: Produto; // Produto relacionado (join)
 }
