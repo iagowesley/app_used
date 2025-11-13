@@ -1,15 +1,15 @@
 ﻿// Cliente do Supabase configurado para uso no frontend
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
 
-if (!supabaseUrl) {
-  throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing. Please check your .env.local file');
+if (!supabaseUrl || supabaseUrl === 'your_supabase_project_url') {
+  throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing or not configured. Please check your .env.local file and add your Supabase project URL from https://app.supabase.com > Settings > API');
 }
 
-if (!supabaseAnonKey) {
-  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is missing. Please check your .env.local file');
+if (!supabaseAnonKey || supabaseAnonKey === 'your_supabase_anon_key') {
+  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is missing or not configured. Please check your .env.local file and add your Supabase anon key from https://app.supabase.com > Settings > API');
 }
 
 // Cliente para uso no CLIENT-SIDE (com RLS)
