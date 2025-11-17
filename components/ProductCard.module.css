@@ -52,7 +52,7 @@
   position: absolute;
   top: 12px;
   left: 12px;
-  background: linear-gradient(135deg, #FF7A00 0%, #FF9E40 100%);
+  background: #d97757;
   color: white;
   padding: 6px 14px;
   border-radius: 8px;
@@ -60,7 +60,7 @@
   font-weight: 700;
   text-transform: lowercase;
   letter-spacing: 0.3px;
-  box-shadow: 0 2px 8px rgba(255, 122, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .imageCount {

@@ -1,5 +1,5 @@
 ﻿/* Estilos globais da aplicação used */
-/* Paleta: Branco (#FFFFFF) e Laranja (#FF7A00) */
+/* Paleta: Branco (#FFFFFF) e Coral (#d97757) */
 
 * {
   box-sizing: border-box;
@@ -9,7 +9,7 @@
 
 :root {
   --color-primary: #FFFFFF;
-  --color-accent: #FF7A00;
+  --color-accent: #d97757;
   --color-text: #333333;
   --color-text-light: #666666;
   --border-radius: 16px;

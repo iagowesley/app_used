@@ -34,7 +34,8 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.container}>
         <Link href="/" className={styles.logo}>
-          <img src="/logoused.png" alt="used" className={styles.logoImage} />
+          <img src="/logoused.svg" alt="used" className={styles.logoImage} />
+          <span className={styles.logoText}>used</span>
         </Link>
         
         <nav className={styles.nav}>

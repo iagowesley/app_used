@@ -19,6 +19,7 @@
 .logo {
   display: flex;
   align-items: center;
+  gap: 8px;
   text-decoration: none;
   transition: opacity 0.3s ease;
 }
@@ -32,6 +33,15 @@
   height: 70px;
   width: auto;
   object-fit: contain;
+}
+
+.logoText {
+  font-size: 32px;
+  font-weight: 700;
+  color: #d97757;
+  text-transform: lowercase;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .nav {
@@ -118,6 +128,10 @@
 
   .logoImage {
     height: 53px;
+  }
+
+  .logoText {
+    font-size: 24px;
   }
 
   .nav {

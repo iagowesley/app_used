@@ -1,7 +1,7 @@
 ﻿/* Hero Section */
 .heroSection {
-  background: linear-gradient(135deg, #FF7A00 0%, #FF9E40 100%);
-  padding: 80px 0;
+  background: #d97757;
+  padding: 130px 0;
   margin-bottom: 48px;
   color: white;
   position: relative;
@@ -257,19 +257,19 @@
 
 .filterButton:hover {
   background-color: #fff5ec;
-  border-color: #FF7A00;
-  color: #FF7A00;
+  border-color: #d97757;
+  color: #d97757;
 }
 
 .filterButtonActive {
-  background-color: #FF7A00;
-  border-color: #FF7A00;
+  background-color: #d97757;
+  border-color: #d97757;
   color: white;
 }
 
 .filterButtonActive:hover {
-  background-color: #e66d00;
-  border-color: #e66d00;
+  background-color: #C66A4A;
+  border-color: #C66A4A;
 }
 
 @media (max-width: 768px) {
