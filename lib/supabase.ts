@@ -26,12 +26,16 @@ export const supabase = createClient(
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 export const supabaseAdmin = supabaseServiceKey 
-  ? createClient(supabaseUrl, supabaseServiceKey, {
-      auth: {
-        autoRefreshToken: false,
-        persistSession: false
+  ? createClient(
+      supabaseUrl || 'https://placeholder.supabase.co',
+      supabaseServiceKey,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
       }
-    })
+    )
   : supabase;
 
 // Tipos para o banco de dados
