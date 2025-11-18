@@ -249,7 +249,7 @@ export default function ProdutoDetalhes() {
                 disabled
                 className={`${styles.whatsappButton} ${styles.whatsappButtonDisabled}`}
               >
-                <span className={styles.lockIcon}>🔒</span>
+                <img src="/cadeado-trancado.png" alt="vendido" className={styles.lockIcon} />
                 produto vendido
               </button>
               <p className={styles.info}>

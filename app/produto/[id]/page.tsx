@@ -175,16 +175,32 @@ export default function ProdutoDetalhes() {
           </div>
 
           {/* Botão de Comprar via WhatsApp */}
-          <button 
-            onClick={abrirWhatsApp}
-            className={styles.whatsappButton}
-          >
-            comprar via whatsapp
-          </button>
-
-          <p className={styles.info}>
-            ao clicar, você será direcionado para conversar com o vendedor
-          </p>
+          {produto.vendido && !isProprietario ? (
+            <>
+              <button 
+                disabled
+                className={`${styles.whatsappButton} ${styles.whatsappButtonDisabled}`}
+              >
+                <img src="/cadeado-trancado.png" alt="vendido" className={styles.lockIcon} />
+                produto vendido
+              </button>
+              <p className={styles.info}>
+                este produto já foi vendido
+              </p>
+            </>
+          ) : (
+            <>
+              <button 
+                onClick={abrirWhatsApp}
+                className={styles.whatsappButton}
+              >
+                comprar via whatsapp
+              </button>
+              <p className={styles.info}>
+                ao clicar, você será direcionado para conversar com o vendedor
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>

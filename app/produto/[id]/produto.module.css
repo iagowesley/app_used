@@ -136,8 +136,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  text-transform: lowercase;
 }
 
 .whatsappButton:hover {
@@ -145,6 +147,32 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
   opacity: 1;
+}
+
+.whatsappButton:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.whatsappButtonDisabled {
+  background-color: #6c757d !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3) !important;
+  cursor: not-allowed !important;
+  opacity: 0.8;
+}
+
+.whatsappButtonDisabled:hover {
+  background-color: #5a6268 !important;
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3) !important;
+}
+
+.lockIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  display: inline-block;
 }
 
 .info {

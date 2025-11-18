@@ -1,30 +1,63 @@
 ﻿/* Hero Section */
 .heroSection {
   background: #d97757;
-  padding: 130px 0;
-  margin-bottom: 48px;
+  padding: 130px 0 250px 0;
+  margin-bottom: 0;
   color: white;
   position: relative;
   overflow: hidden;
 }
 
-.heroContent {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: center;
-  position: relative;
+.heroSection::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 120px;
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='white' d='M0,70 Q240,30 480,50 T960,45 T1440,55 L1440,120 L0,120 Z'/%3E%3Cpath fill='rgba(255,255,255,0.7)' d='M0,80 Q360,40 720,60 T1440,60 L1440,120 L0,120 Z'/%3E%3C/svg%3E");
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+  background-position: bottom;
   z-index: 1;
+  pointer-events: none;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .heroText {
-  text-align: left;
+  text-align: center;
+}
+
+.heroTitleContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.heroLogo {
+  height: 120px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
 }
 
 .heroTitle {
   font-size: 72px;
   font-weight: 700;
-  margin-bottom: 16px;
+  margin-bottom: 0;
   text-transform: lowercase;
   letter-spacing: -2px;
 }
@@ -42,6 +75,59 @@
   line-height: 1.8;
   text-transform: lowercase;
   opacity: 0.9;
+}
+
+/* Cards de Benefícios */
+.benefitsCards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-top: 80px;
+  position: relative;
+  z-index: 2;
+}
+
+.benefitCard {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  padding: 32px 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+.benefitCard:hover {
+  background: rgba(255, 255, 255, 0.25);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.benefitIcon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px auto;
+  display: block;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+}
+
+.benefitTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-transform: lowercase;
+  color: white;
+}
+
+.benefitDescription {
+  font-size: 15px;
+  line-height: 1.6;
+  text-transform: lowercase;
+  opacity: 0.9;
+  color: white;
 }
 
 /* Elementos Decorativos */
@@ -157,19 +243,20 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    padding: 48px 20px;
-    min-height: 400px;
+    padding: 48px 20px 200px 20px;
+    min-height: auto;
   }
   
   .heroContent {
-    grid-template-columns: 1fr;
-    gap: 32px;
+    max-width: 100%;
   }
   
-  .heroText {
-    text-align: center;
-    position: relative;
-    z-index: 2;
+  .heroTitleContainer {
+    gap: 12px;
+  }
+  
+  .heroLogo {
+    height: 80px;
   }
   
   .heroTitle {
@@ -184,37 +271,39 @@
     font-size: 16px;
   }
   
-  .decorativeElements {
-    width: 100%;
-    opacity: 0.4;
+  .benefitsCards {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    margin-top: 48px;
   }
   
-  .decorativeElementsLeft {
-    width: 100%;
-    opacity: 0.3;
+  .benefitCard {
+    padding: 24px 20px;
   }
   
-  .floatingIcon {
-    font-size: 32px;
+  .benefitIcon {
+    width: 56px;
+    height: 56px;
   }
   
-  .geometricShape {
-    width: 60px;
-    height: 60px;
+  .benefitTitle {
+    font-size: 18px;
   }
   
-  .geometricShapeLeft {
-    width: 50px;
-    height: 50px;
-  }
-  
-  .priceTag {
-    padding: 8px 16px;
+  .benefitDescription {
     font-size: 14px;
   }
 }
 
+@media (min-width: 769px) and (max-width: 1024px) {
+  .benefitsCards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+}
+
 .header {
+  margin-top: 48px;
   margin-bottom: 32px;
 }
 

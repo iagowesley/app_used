@@ -1,5 +1,7 @@
 ﻿// Layout principal da aplicação
 import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import ReportBugButton from '@/components/ReportBugButton';
 import '@/styles/globals.css';
 
 export const metadata = {
@@ -15,20 +17,17 @@ export default function RootLayout({
   return (
     <html lang="pt-BR">
       <head>
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1524035108769759"
-          crossOrigin="anonymous"
-        ></script>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet" />
       </head>
       <body>
         <Header />
-        <main style={{ minHeight: '80vh', padding: '40px 0' }}>
+        <main style={{ minHeight: '80vh' }}>
           {children}
         </main>
+        <Footer />
+        <ReportBugButton />
       </body>
     </html>
   );

@@ -1,0 +1,55 @@
+.reportBugButton {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #d3d3d3;
+  border: none;
+  padding: 14px 8px;
+  cursor: pointer;
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border-radius: 0 12px 12px 0;
+  transition: background-color 0.3s ease;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+.reportBugButton:hover {
+  background-color: #c0c0c0;
+}
+
+.bugIcon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  transform: rotate(-90deg);
+}
+
+.bugText {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333;
+  text-transform: lowercase;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+  .reportBugButton {
+    padding: 12px 6px;
+  }
+
+  .bugIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .bugText {
+    display: none;
+  }
+}
+

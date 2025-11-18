@@ -77,7 +77,10 @@ export default function Home() {
         <div className="container">
           <div className={styles.heroContent}>
             <div className={styles.heroText}>
-              <h1 className={styles.heroTitle}>used</h1>
+              <div className={styles.heroTitleContainer}>
+                <img src="/logoused.svg" alt="used" className={styles.heroLogo} />
+                <h1 className={styles.heroTitle}>used</h1>
+              </div>
               <p className={styles.heroSubtitle}>
                 marketplace minimalista para itens usados e seminovos
               </p>
@@ -87,24 +90,41 @@ export default function Home() {
               </p>
             </div>
           </div>
-        </div>
-        {/* Elementos Decorativos - Direita */}
-        <div className={styles.decorativeElements}>
-          <div className={styles.floatingIcon} style={{ top: '35%', right: '38%', animationDelay: '1s' }}>🛒</div>
-          <div className={styles.floatingIcon} style={{ top: '60%', right: '45%', animationDelay: '2s' }}>🏷️</div>
-          <div className={styles.floatingIcon} style={{ top: '20%', right: '55%', animationDelay: '2.5s' }}>📦</div>
           
-          <div className={styles.geometricShape} style={{ top: '15%', right: '40%', animationDelay: '0s' }}></div>
-          <div className={styles.geometricShape} style={{ top: '50%', right: '35%', animationDelay: '1s' }}></div>
-          <div className={styles.geometricShape} style={{ top: '70%', right: '52%', animationDelay: '2s' }}></div>
-          
-          <div className={styles.priceTag} style={{ top: '30%', right: '45%' }}>#used</div>
-          <div className={styles.priceTag} style={{ top: '70%', right: '35%' }}>#semi</div>
-        </div>
-        
-        {/* Elementos Decorativos - Esquerda */}
-        <div className={styles.decorativeElementsLeft}>
-          
+          {/* Cards de Benefícios */}
+          <div className={styles.benefitsCards}>
+            <div className={styles.benefitCard}>
+              <img src="/rapido.png" alt="rápido" className={styles.benefitIcon} />
+              <h3 className={styles.benefitTitle}>rápido e simples</h3>
+              <p className={styles.benefitDescription}>
+                anuncie em minutos. sem burocracias ou complicações desnecessárias.
+              </p>
+            </div>
+            
+            <div className={styles.benefitCard}>
+              <img src="/bolsa-de-dinheiro.png" alt="economize" className={styles.benefitIcon} />
+              <h3 className={styles.benefitTitle}>economize dinheiro</h3>
+              <p className={styles.benefitDescription}>
+                encontre produtos de qualidade por preços muito mais acessíveis.
+              </p>
+            </div>
+            
+            <div className={styles.benefitCard}>
+              <img src="/energia-sustentavel.png" alt="sustentável" className={styles.benefitIcon} />
+              <h3 className={styles.benefitTitle}>sustentável</h3>
+              <p className={styles.benefitDescription}>
+                dê nova vida aos produtos e contribua para um consumo mais consciente.
+              </p>
+            </div>
+            
+            <div className={styles.benefitCard}>
+              <img src="/direto.png" alt="direto" className={styles.benefitIcon} />
+              <h3 className={styles.benefitTitle}>direto com o vendedor</h3>
+              <p className={styles.benefitDescription}>
+                negocie diretamente, sem intermediários. transparência total.
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
