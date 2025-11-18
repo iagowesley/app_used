@@ -20,6 +20,7 @@ export default function ProdutoDetalhes() {
   const [isAdminUser, setIsAdminUser] = useState(false);
   const [deletando, setDeletando] = useState(false);
   const [mostrarModalDeletar, setMostrarModalDeletar] = useState(false);
+  const [marcandoVendido, setMarcandoVendido] = useState(false);
 
   useEffect(() => {
     carregarProduto();
@@ -101,6 +102,39 @@ export default function ProdutoDetalhes() {
     }
   };
 
+  const marcarComoVendido = async () => {
+    if (!produto || !user || !isProprietario) return;
+    
+    setMarcandoVendido(true);
+    
+    try {
+      const agora = new Date().toISOString();
+      const novoStatus = !produto.vendido;
+      
+      const { error } = await supabase
+        .from('produtos')
+        .update({
+          vendido: novoStatus,
+          data_vendido: novoStatus ? agora : null
+        })
+        .eq('id', produto.id);
+      
+      if (error) throw error;
+      
+      // Atualizar estado local
+      setProduto({
+        ...produto,
+        vendido: novoStatus,
+        data_vendido: novoStatus ? agora : undefined
+      });
+    } catch (error) {
+      console.error('erro ao marcar como vendido:', error);
+      alert('erro ao atualizar status do produto');
+    } finally {
+      setMarcandoVendido(false);
+    }
+  };
+
   const isProprietario = user && produto && user.id === produto.user_id;
   const podeDelatar = isProprietario || isAdminUser;
 
@@ -129,15 +163,27 @@ export default function ProdutoDetalhes() {
           voltar
         </button>
         
-        {podeDelatar && (
-          <button 
-            onClick={abrirModalDeletar} 
-            className={styles.deleteButton}
-          >
-            {isAdminUser && !isProprietario && <span className={styles.adminBadge}>ADMIN</span>}
-            deletar anúncio
-          </button>
-        )}
+        <div className={styles.actionButtons}>
+          {isProprietario && (
+            <button 
+              onClick={marcarComoVendido}
+              className={`${styles.vendidoButton} ${produto.vendido ? styles.vendidoButtonActive : ''}`}
+              disabled={marcandoVendido}
+            >
+              {marcandoVendido ? 'atualizando...' : produto.vendido ? 'marcar como disponível' : 'marcar como vendido'}
+            </button>
+          )}
+          
+          {podeDelatar && (
+            <button 
+              onClick={abrirModalDeletar} 
+              className={styles.deleteButton}
+            >
+              {isAdminUser && !isProprietario && <span className={styles.adminBadge}>ADMIN</span>}
+              deletar anúncio
+            </button>
+          )}
+        </div>
       </div>
 
       <div className={styles.produtoContainer}>
@@ -197,16 +243,32 @@ export default function ProdutoDetalhes() {
           </div>
 
           {/* Botão de Comprar via WhatsApp */}
-          <button 
-            onClick={abrirWhatsApp}
-            className={styles.whatsappButton}
-          >
-            comprar via whatsapp
-          </button>
-
-          <p className={styles.info}>
-            ao clicar, você será direcionado para conversar com o vendedor
-          </p>
+          {produto.vendido && !isProprietario ? (
+            <>
+              <button 
+                disabled
+                className={`${styles.whatsappButton} ${styles.whatsappButtonDisabled}`}
+              >
+                <span className={styles.lockIcon}>🔒</span>
+                produto vendido
+              </button>
+              <p className={styles.info}>
+                este produto já foi vendido
+              </p>
+            </>
+          ) : (
+            <>
+              <button 
+                onClick={abrirWhatsApp}
+                className={styles.whatsappButton}
+              >
+                comprar via whatsapp
+              </button>
+              <p className={styles.info}>
+                ao clicar, você será direcionado para conversar com o vendedor
+              </p>
+            </>
+          )}
         </div>
       </div>
 

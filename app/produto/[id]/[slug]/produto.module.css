@@ -18,6 +18,14 @@
   align-items: center;
   margin-bottom: 24px;
   gap: 16px;
+  flex-wrap: wrap;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .backButton {
@@ -33,6 +41,40 @@
 .backButton:hover {
   color: var(--color-accent);
   opacity: 1;
+}
+
+.vendidoButton {
+  background-color: var(--color-accent);
+  color: white;
+  padding: 8px 16px;
+  font-size: 16px;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  text-transform: lowercase;
+}
+
+.vendidoButton:hover {
+  background-color: #e66900;
+  border-color: #e66900;
+  opacity: 1;
+}
+
+.vendidoButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.vendidoButtonActive {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.vendidoButtonActive:hover {
+  background-color: #218838;
+  border-color: #218838;
 }
 
 .deleteButton {
@@ -155,8 +197,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+  text-transform: lowercase;
 }
 
 .whatsappButton:hover {
@@ -164,6 +208,30 @@
   transform: translateY(-2px);
   box-shadow: 0 6px 16px rgba(37, 211, 102, 0.4);
   opacity: 1;
+}
+
+.whatsappButton:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.whatsappButtonDisabled {
+  background-color: #6c757d !important;
+  color: white !important;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3) !important;
+  cursor: not-allowed !important;
+  opacity: 0.8;
+}
+
+.whatsappButtonDisabled:hover {
+  background-color: #5a6268 !important;
+  transform: none !important;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3) !important;
+}
+
+.lockIcon {
+  font-size: 20px;
+  display: inline-block;
 }
 
 .info {

@@ -41,6 +41,8 @@ export interface Produto {
   condicao: string; // Condição do produto (novo, seminovo, usado)
   formas_pagamento: string[]; // Formas de pagamento aceitas
   faz_entrega: boolean; // Se o vendedor faz entrega
+  vendido?: boolean; // Se o produto foi vendido
+  data_vendido?: string; // Data/hora em que foi marcado como vendido
   created_at?: string;
 }
 

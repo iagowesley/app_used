@@ -10,7 +10,9 @@ import styles from './page.module.css';
 export default function Home() {
   const [produtos, setProdutos] = useState<Produto[]>([]);
   const [loading, setLoading] = useState(true);
-  const [busca, setBusca] = useState('');
+  const [busca, setBusca] = useState(''); // Valor do input
+  const [termoBusca, setTermoBusca] = useState(''); // Termo de busca aplicado
+  const [buscando, setBuscando] = useState(false); // Loading da busca
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('');
 
   useEffect(() => {
@@ -33,8 +35,37 @@ export default function Home() {
     }
   };
 
+  // Função para verificar se produto vendido ainda está dentro das 24 horas
+  const produtoAindaVisivel = (produto: Produto): boolean => {
+    if (!produto.vendido || !produto.data_vendido) {
+      return true; // Produto não vendido, sempre visível
+    }
+    
+    const dataVendido = new Date(produto.data_vendido);
+    const agora = new Date();
+    const diferencaHoras = (agora.getTime() - dataVendido.getTime()) / (1000 * 60 * 60);
+    
+    return diferencaHoras <= 24; // Visível se vendido há menos de 24 horas
+  };
+
+  const executarBusca = async () => {
+    setBuscando(true);
+    
+    // Simular loading de 2 segundos
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
+    // Aplicar o termo de busca
+    setTermoBusca(busca);
+    setBuscando(false);
+  };
+
   const produtosFiltrados = produtos.filter(produto => {
-    const matchBusca = produto.nome.toLowerCase().includes(busca.toLowerCase());
+    // Filtrar produtos vendidos há mais de 24 horas
+    if (!produtoAindaVisivel(produto)) {
+      return false;
+    }
+    
+    const matchBusca = !termoBusca || produto.nome.toLowerCase().includes(termoBusca.toLowerCase());
     const matchCategoria = !categoriaSelecionada || produto.categoria === categoriaSelecionada;
     return matchBusca && matchCategoria;
   });
@@ -80,13 +111,29 @@ export default function Home() {
       <div className="container">
         <div className={styles.header}>
           <h2 className={styles.title}>todos os anúncios</h2>
-          <input
-            type="text"
-            placeholder="buscar por nome..."
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            className={styles.searchInput}
-          />
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="buscar por nome..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !buscando) {
+                  executarBusca();
+                }
+              }}
+              className={styles.searchInput}
+              disabled={buscando}
+            />
+            <button 
+              className={styles.searchButton}
+              onClick={executarBusca}
+              disabled={buscando}
+              aria-label="pesquisar"
+            >
+              {buscando ? 'buscando...' : 'buscar'}
+            </button>
+          </div>
         </div>
 
         {/* Filtros de Categoria */}
@@ -108,12 +155,14 @@ export default function Home() {
           ))}
         </div>
 
-      {loading ? (
+      {loading || buscando ? (
         <div className={styles.loading}>
           <div className="loading"></div>
         </div>
       ) : produtosFiltrados.length === 0 ? (
-        <p className={styles.empty}>nenhum anúncio encontrado</p>
+        <p className={styles.empty}>
+          {termoBusca ? 'nenhum anúncio encontrado para sua busca' : 'nenhum anúncio encontrado'}
+        </p>
       ) : (
         <div className="products-grid">
           {produtosFiltrados.map((produto) => (

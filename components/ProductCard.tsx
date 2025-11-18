@@ -28,6 +28,11 @@ export default function ProductCard({ produto }: ProductCardProps) {
         ) : (
           <div className={styles.noImage}>sem imagem</div>
         )}
+        {produto.vendido && (
+          <div className={styles.vendidoBadge}>
+            vendido
+          </div>
+        )}
         {produto.categoria && (
           <div className={styles.categoriaBadge}>
             {getCategoriaLabel(produto.categoria)}

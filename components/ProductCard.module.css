@@ -48,6 +48,24 @@
   text-transform: lowercase;
 }
 
+.vendidoBadge {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 0, 0, 0.85);
+  color: white;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  pointer-events: none;
+}
+
 .categoriaBadge {
   position: absolute;
   top: 12px;
@@ -61,6 +79,7 @@
   text-transform: lowercase;
   letter-spacing: 0.3px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 5;
 }
 
 .imageCount {
