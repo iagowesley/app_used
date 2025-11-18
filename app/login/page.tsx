@@ -142,12 +142,27 @@ export default function Login() {
 
       if (error) throw error;
 
+      // Fazer logout após redefinir senha para forçar novo login
+      await supabase.auth.signOut();
+      
       setSenhaRedefinida(true);
     } catch (error: any) {
       setErro(error.message || 'erro ao redefinir senha');
     } finally {
       setRedefinindo(false);
     }
+  };
+
+  const irParaLogin = async () => {
+    // Garantir que o usuário está deslogado
+    await supabase.auth.signOut();
+    // Limpar estados e redirecionar
+    setMostrarRedefinir(false);
+    setSenhaRedefinida(false);
+    setNovaSenha('');
+    setConfirmarSenha('');
+    setErro('');
+    router.push('/login');
   };
 
   if (checkingAuth) {
@@ -157,13 +172,6 @@ export default function Login() {
       </div>
     );
   }
-
-  const irParaLogin = async () => {
-    // Fazer logout para garantir que o usuário não fique logado automaticamente
-    await supabase.auth.signOut();
-    // Limpar os parâmetros da URL e redirecionar
-    router.push('/login');
-  };
 
   // Se senha foi redefinida com sucesso
   if (mostrarRedefinir && senhaRedefinida) {
