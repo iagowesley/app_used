@@ -4,16 +4,22 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
 
-if (!supabaseUrl || supabaseUrl === 'your_supabase_project_url') {
-  throw new Error('NEXT_PUBLIC_SUPABASE_URL is missing or not configured. Please check your .env.local file and add your Supabase project URL from https://app.supabase.com > Settings > API');
-}
+// Validações apenas em runtime (não durante build)
+if (typeof window !== 'undefined') {
+  if (!supabaseUrl || supabaseUrl === 'your_supabase_project_url') {
+    console.error('NEXT_PUBLIC_SUPABASE_URL is missing or not configured. Please check your .env.local file and add your Supabase project URL from https://app.supabase.com > Settings > API');
+  }
 
-if (!supabaseAnonKey || supabaseAnonKey === 'your_supabase_anon_key') {
-  throw new Error('NEXT_PUBLIC_SUPABASE_ANON_KEY is missing or not configured. Please check your .env.local file and add your Supabase anon key from https://app.supabase.com > Settings > API');
+  if (!supabaseAnonKey || supabaseAnonKey === 'your_supabase_anon_key') {
+    console.error('NEXT_PUBLIC_SUPABASE_ANON_KEY is missing or not configured. Please check your .env.local file and add your Supabase anon key from https://app.supabase.com > Settings > API');
+  }
 }
 
 // Cliente para uso no CLIENT-SIDE (com RLS)
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co',
+  supabaseAnonKey || 'placeholder-key'
+);
 
 // Cliente para uso no SERVER-SIDE (API Routes) - BYPASSA RLS
 // Use este cliente nas rotas API para evitar problemas com RLS

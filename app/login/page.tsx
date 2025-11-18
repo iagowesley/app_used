@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import styles from './login.module.css';
@@ -22,15 +22,17 @@ export default function Login() {
   const [redefinindo, setRedefinindo] = useState(false);
   const [senhaRedefinida, setSenhaRedefinida] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Verificar se há parâmetro de reset na URL
-    const reset = searchParams.get('reset');
-    if (reset === 'true') {
-      setMostrarRedefinir(true);
-      setCheckingAuth(false);
-      return;
+    // Verificar se há parâmetro de reset na URL usando window.location
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const reset = urlParams.get('reset');
+      if (reset === 'true') {
+        setMostrarRedefinir(true);
+        setCheckingAuth(false);
+        return;
+      }
     }
 
     // Verificar se o usuário já está logado
@@ -41,7 +43,7 @@ export default function Login() {
         setCheckingAuth(false);
       }
     });
-  }, [router, searchParams]);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
