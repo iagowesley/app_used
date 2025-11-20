@@ -67,15 +67,12 @@ export default function ReportBugModal({ isOpen, onClose }: ReportBugModalProps)
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.formGroup}>
-            <label htmlFor="descricao" className={styles.label}>
-              descrição do bug
-            </label>
             <textarea
               id="descricao"
               value={descricao}
               onChange={(e) => setDescricao(e.target.value)}
               className={styles.textarea}
-              placeholder="descreva o bug encontrado..."
+              placeholder="escreva aqui..."
               rows={6}
               disabled={enviando}
               required

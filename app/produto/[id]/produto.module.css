@@ -16,6 +16,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 40px;
   margin-bottom: 24px;
   gap: 16px;
 }
@@ -96,8 +97,33 @@
   font-size: 36px;
   font-weight: 700;
   color: var(--color-accent);
-  margin-bottom: 32px;
+  margin-bottom: 16px;
   text-transform: none;
+}
+
+.vendedorSection {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  padding: 12px 16px;
+  background-color: #F8F9FA;
+  border-radius: var(--border-radius);
+  border: 1px solid #E0E0E0;
+}
+
+.vendedorLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-transform: lowercase;
+}
+
+.vendedorNome {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: capitalize;
 }
 
 .descricaoContainer {

@@ -1,7 +1,7 @@
 ﻿/* Hero Section */
 .heroSection {
   background: #d97757;
-  padding: 130px 0 250px 0;
+  padding: 80px 0 250px 0;
   margin-bottom: 0;
   color: white;
   position: relative;
@@ -92,7 +92,7 @@
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 16px;
-  padding: 32px 24px;
+  padding: 48px 32px;
   text-align: center;
   transition: all 0.3s ease;
   cursor: default;
@@ -243,7 +243,7 @@
 
 @media (max-width: 768px) {
   .heroSection {
-    padding: 48px 20px 200px 20px;
+    padding: 40px 20px 200px 20px;
     min-height: auto;
   }
   
@@ -278,7 +278,7 @@
   }
   
   .benefitCard {
-    padding: 24px 20px;
+    padding: 36px 24px;
   }
   
   .benefitIcon {

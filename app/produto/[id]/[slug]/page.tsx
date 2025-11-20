@@ -6,7 +6,6 @@ import { useParams, useRouter } from 'next/navigation';
 import { supabase, Produto } from '@/lib/supabase';
 import Carousel from '@/components/Carousel';
 import { extrairIdDaUrl } from '@/lib/utils';
-import { verificarAdmin } from '@/lib/admin';
 import ConfirmModal from '@/components/ConfirmModal';
 import { getCategoriaLabel, getCondicaoLabel, getCondicaoEmoji, getFormaPagamentoLabel, getFormaPagamentoEmoji } from '@/lib/categorias';
 import styles from './produto.module.css';
@@ -30,9 +29,33 @@ export default function ProdutoDetalhes() {
   const verificarUsuario = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     setUser(user);
-    if (user) {
-      const admin = await verificarAdmin(user);
-      setIsAdminUser(admin);
+    if (user && user.email) {
+      // Verificar admin via API route (seguro, não expõe emails)
+      try {
+        const response = await fetch('/api/admin/verificar', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email: user.email }),
+        });
+        
+        if (!response.ok) {
+          // Se a rota não existir (404), apenas não definir como admin
+          if (response.status === 404) {
+            console.warn('rota de verificação de admin não encontrada');
+            setIsAdminUser(false);
+            return;
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        setIsAdminUser(data.isAdmin || false);
+      } catch (error) {
+        console.error('erro ao verificar admin:', error);
+        setIsAdminUser(false);
+      }
     }
   };
 
@@ -78,6 +101,15 @@ export default function ProdutoDetalhes() {
     setDeletando(true);
     
     try {
+      // Verificar se é proprietário ou admin
+      const isProprietario = user.id === produto.user_id;
+      
+      if (!isProprietario && !isAdminUser) {
+        alert('você não tem permissão para deletar este anúncio');
+        setDeletando(false);
+        return;
+      }
+      
       // Deletar imagens do storage
       for (const imagemUrl of produto.imagens) {
         const path = imagemUrl.split('/').pop();
@@ -86,18 +118,28 @@ export default function ProdutoDetalhes() {
         }
       }
       
-      // Deletar produto do banco
-      const { error } = await supabase
-        .from('produtos')
-        .delete()
-        .eq('id', produto.id);
+      // Deletar produto do banco via API route (usa supabaseAdmin que bypassa RLS)
+      const response = await fetch(`/api/anuncios/${produto.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userEmail: user.email,
+          userId: user.id,
+        }),
+      });
       
-      if (error) throw error;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.erro || 'erro ao deletar anúncio');
+      }
       
       setMostrarModalDeletar(false);
       router.push('/');
-    } catch (error) {
+    } catch (error: any) {
       console.error('erro ao deletar anúncio:', error);
+      alert(error.message || 'erro ao deletar anúncio. tente novamente.');
       setDeletando(false);
     }
   };
@@ -196,6 +238,14 @@ export default function ProdutoDetalhes() {
         <div className={styles.infoSection}>
           <h1 className={styles.nome}>{produto.nome}</h1>
           <p className={styles.preco}>R$ {produto.preco.toFixed(2)}</p>
+
+          {/* Nome do Vendedor */}
+          {produto.nome_vendedor && (
+            <div className={styles.vendedorSection}>
+              <span className={styles.vendedorLabel}>vendedor:</span>
+              <span className={styles.vendedorNome}>{produto.nome_vendedor}</span>
+            </div>
+          )}
 
           {/* Tags de Informações */}
           <div className={styles.tagsContainer}>

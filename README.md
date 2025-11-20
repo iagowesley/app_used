@@ -46,6 +46,29 @@ used/
 └── public/                # Arquivos estáticos
 ```
 
+##  correções de segurança
+
+### função update_updated_at_column
+
+Para corrigir o aviso de segurança do Supabase sobre a função `update_updated_at_column`, execute o SQL no arquivo `fix_update_updated_at_column.sql` no Supabase Dashboard > SQL Editor.
+
+### proteção contra senhas vazadas
+
+⚠️ **IMPORTANTE:** Habilite a proteção contra senhas vazadas (Leaked Password Protection) no Supabase Dashboard.
+
+**Como habilitar:**
+1. Acesse Supabase Dashboard > Authentication > Settings
+2. Procure por "Leaked Password Protection" ou "Have I Been Pwned (HIBP) Check"
+3. Ative o toggle para ON
+4. Salve as alterações
+
+**Documentação completa:** Veja o arquivo `HABILITAR_PROTECAO_SENHAS.md` para instruções detalhadas.
+
+**Benefícios:**
+- Protege contra senhas comprometidas em vazamentos conhecidos
+- Reduz risco de credential stuffing
+- Melhora postura de segurança e conformidade
+
 ##  schema do banco de dados
 
 ### tabela: produtos

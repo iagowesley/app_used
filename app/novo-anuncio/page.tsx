@@ -21,6 +21,7 @@ export default function NovoAnuncio() {
   const [descricao, setDescricao] = useState('');
   const [preco, setPreco] = useState('');
   const [whatsapp, setWhatsapp] = useState('');
+  const [nomeVendedor, setNomeVendedor] = useState('');
   const [categoria, setCategoria] = useState('');
   const [condicao, setCondicao] = useState('');
   const [formasPagamento, setFormasPagamento] = useState<string[]>([]);
@@ -29,6 +30,7 @@ export default function NovoAnuncio() {
   const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState('');
+  const [mostrarSucesso, setMostrarSucesso] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -189,6 +191,18 @@ export default function NovoAnuncio() {
         throw new Error('por favor, insira um whatsapp válido (11 dígitos)');
       }
 
+      // Validar e sanitizar nome do vendedor (opcional)
+      let nomeVendedorSanitizado = '';
+      if (nomeVendedor.trim()) {
+        nomeVendedorSanitizado = sanitizeNomeProduto(nomeVendedor);
+        if (nomeVendedorSanitizado.length < 2) {
+          throw new Error('nome do vendedor deve ter pelo menos 2 caracteres');
+        }
+        if (nomeVendedorSanitizado.length > 100) {
+          throw new Error('nome do vendedor deve ter no máximo 100 caracteres');
+        }
+      }
+
       // Upload das imagens
       const urlsImagens = await uploadImagens(imagens);
 
@@ -203,6 +217,7 @@ export default function NovoAnuncio() {
             preco: validacaoPreco.valor,
             imagens: urlsImagens,
             whatsapp: whatsapp,
+            nome_vendedor: nomeVendedorSanitizado ? nomeVendedorSanitizado.toLowerCase() : null,
             categoria: categoria,
             condicao: condicao,
             formas_pagamento: formasPagamento,
@@ -212,8 +227,13 @@ export default function NovoAnuncio() {
 
       if (insertError) throw insertError;
 
-      // Redirecionar para a página inicial
-      router.push('/');
+      // Mostrar popup de sucesso
+      setMostrarSucesso(true);
+      
+      // Redirecionar para a página inicial após 2 segundos
+      setTimeout(() => {
+        router.push('/');
+      }, 2000);
     } catch (error: any) {
       setErro(error.message || 'erro ao criar anúncio');
     } finally {
@@ -379,6 +399,25 @@ export default function NovoAnuncio() {
                 <small className={styles.hint}>formato: xx x xxxx-xxxx</small>
               </div>
 
+              {/* Nome do Vendedor - Full Width */}
+              <div className={`form-group ${styles.fieldFullWidth}`}>
+                <label htmlFor="nomeVendedor">
+                  seu nome (opcional)
+                </label>
+                <input
+                  id="nomeVendedor"
+                  type="text"
+                  value={nomeVendedor}
+                  onChange={(e) => setNomeVendedor(e.target.value)}
+                  placeholder="ex: joão silva"
+                  disabled={loading}
+                  maxLength={100}
+                />
+                <small className={styles.hint}>
+                  seu nome aparecerá no anúncio para os compradores
+                </small>
+              </div>
+
               {/* Nome - Full Width */}
               <div className={`form-group ${styles.fieldFullWidth}`}>
                 <label htmlFor="nome">nome do item</label>
@@ -462,6 +501,24 @@ export default function NovoAnuncio() {
           </div>
         </form>
       </div>
+
+      {/* Popup de Sucesso */}
+      {mostrarSucesso && (
+        <div className={styles.popupOverlay} onClick={() => router.push('/')}>
+          <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
+            <h2 className={styles.popupTitle}>anúncio criado com sucesso!</h2>
+            <p className={styles.popupText}>
+              seu anúncio foi cadastrado e já está disponível na plataforma.
+            </p>
+            <button 
+              onClick={() => router.push('/')}
+              className={styles.popupButton}
+            >
+              ver anúncios
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

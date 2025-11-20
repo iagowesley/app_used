@@ -97,7 +97,7 @@ export default function Home() {
               <img src="/rapido.png" alt="rápido" className={styles.benefitIcon} />
               <h3 className={styles.benefitTitle}>rápido e simples</h3>
               <p className={styles.benefitDescription}>
-                anuncie em minutos. sem burocracias ou complicações desnecessárias.
+                anuncie em minutos. sem burocracias ou complicações.
               </p>
             </div>
             
@@ -105,7 +105,7 @@ export default function Home() {
               <img src="/bolsa-de-dinheiro.png" alt="economize" className={styles.benefitIcon} />
               <h3 className={styles.benefitTitle}>economize dinheiro</h3>
               <p className={styles.benefitDescription}>
-                encontre produtos de qualidade por preços muito mais acessíveis.
+                encontre produtos por preços muito mais acessíveis.
               </p>
             </div>
             
@@ -121,7 +121,7 @@ export default function Home() {
               <img src="/direto.png" alt="direto" className={styles.benefitIcon} />
               <h3 className={styles.benefitTitle}>direto com o vendedor</h3>
               <p className={styles.benefitDescription}>
-                negocie diretamente, sem intermediários. transparência total.
+                negocie diretamente, sem intermediários.
               </p>
             </div>
           </div>

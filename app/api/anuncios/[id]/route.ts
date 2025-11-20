@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabaseAdmin } from '@/lib/supabase';
+import { supabaseAdmin, supabase } from '@/lib/supabase';
+import { isAdmin } from '@/lib/admin';
 
 // GET - Buscar anúncio por ID
 export async function GET(
@@ -41,7 +42,43 @@ export async function DELETE(
   try {
     const { id } = params;
     
-    console.log(`🗑️ Deletando anúncio ID: ${id}`);
+    // Receber dados do body (email e userId do usuário)
+    const body = await request.json().catch(() => ({}));
+    const { userEmail, userId } = body;
+    
+    if (!userEmail || !userId) {
+      return NextResponse.json(
+        { erro: 'dados de autenticação não fornecidos' },
+        { status: 401 }
+      );
+    }
+    
+    // Buscar o produto para verificar o dono
+    const { data: produto, error: produtoError } = await supabaseAdmin
+      .from('produtos')
+      .select('user_id')
+      .eq('id', id)
+      .single();
+    
+    if (produtoError || !produto) {
+      return NextResponse.json(
+        { erro: 'anúncio não encontrado' },
+        { status: 404 }
+      );
+    }
+    
+    // Verificar se é admin ou proprietário
+    const isProprietario = userId === produto.user_id;
+    const admin = isAdmin(userEmail);
+    
+    if (!isProprietario && !admin) {
+      return NextResponse.json(
+        { erro: 'você não tem permissão para deletar este anúncio' },
+        { status: 403 }
+      );
+    }
+    
+    console.log(`🗑️ Deletando anúncio ID: ${id} (Admin: ${admin}, Proprietário: ${isProprietario}, Email: ${userEmail})`);
     
     const { error } = await supabaseAdmin
       .from('produtos')

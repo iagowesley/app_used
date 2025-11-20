@@ -47,6 +47,7 @@ export interface Produto {
   preco: number;
   imagens: string[]; // Array de URLs das imagens
   whatsapp: string; // Número do WhatsApp
+  nome_vendedor?: string | null; // Nome do vendedor (opcional)
   categoria: string; // Categoria do produto
   condicao: string; // Condição do produto (novo, seminovo, usado)
   formas_pagamento: string[]; // Formas de pagamento aceitas

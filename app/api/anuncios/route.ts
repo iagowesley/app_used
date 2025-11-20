@@ -109,7 +109,7 @@ export async function POST(request: NextRequest) {
       .select();
 
     if (error) {
-      console.error('❌ Erro ao inserir:', error);
+      console.error('Erro ao inserir:', error);
       return NextResponse.json(
         { erro: error.message },
         { status: 500 }
@@ -117,7 +117,6 @@ export async function POST(request: NextRequest) {
     }
 
     // **BREAKPOINT AQUI** - Sucesso
-    console.log('✅ Anúncio criado com sucesso:', data);
     
     return NextResponse.json(
       { 
@@ -128,7 +127,7 @@ export async function POST(request: NextRequest) {
     );
 
   } catch (error: any) {
-    console.error('❌ Erro no servidor:', error);
+    console.error('Erro no servidor:', error);
     return NextResponse.json(
       { erro: error.message || 'erro ao criar anúncio' },
       { status: 500 }

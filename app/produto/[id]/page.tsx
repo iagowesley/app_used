@@ -169,6 +169,14 @@ export default function ProdutoDetalhes() {
           <h1 className={styles.nome}>{produto.nome}</h1>
           <p className={styles.preco}>R$ {produto.preco.toFixed(2)}</p>
 
+          {/* Nome do Vendedor */}
+          {produto.nome_vendedor && (
+            <div className={styles.vendedorSection}>
+              <span className={styles.vendedorLabel}>vendedor:</span>
+              <span className={styles.vendedorNome}>{produto.nome_vendedor}</span>
+            </div>
+          )}
+
           <div className={styles.descricaoContainer}>
             <h2 className={styles.subtitle}>descrição</h2>
             <p className={styles.descricao}>{produto.descricao}</p>
