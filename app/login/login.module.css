@@ -1,5 +1,4 @@
 .container {
-  border: 1px solid green !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -161,12 +160,6 @@
   justify-content: center;
   flex-direction: column;
   box-sizing: border-box;
-}
-
-@media (max-width: 768px) {
-  .formCard {
-    padding: 25px;
-  }
 }
 
 .loadingContainer {
