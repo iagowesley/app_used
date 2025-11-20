@@ -141,7 +141,7 @@
 
 @media (max-width: 1024px) {
   .rightSection {
-    
+
     width: 100%;
     max-width: 480px;
     flex-shrink: 1;
@@ -160,6 +160,13 @@
   justify-content: center;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+.centeredCard {
+  max-width: 480px;
+  height: auto;
+  border-radius: var(--border-radius-large);
+  margin: 0 auto;
 }
 
 .loadingContainer {
@@ -372,4 +379,3 @@
   height: 20px;
   flex-shrink: 0;
 }
-
