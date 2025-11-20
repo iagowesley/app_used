@@ -14,18 +14,23 @@ export default function Header() {
 
   useEffect(() => {
     // Verificar se há usuário logado
-    supabase.auth.getUser().then(({ data: { user } }) => {
+    const verificarUsuario = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
       setUser(user);
       if (user?.email) {
-        verificarAdmin(user.email);
+        await verificarAdmin(user.email);
+      } else {
+        setIsAdmin(false);
       }
-    });
+    };
+
+    verificarUsuario();
 
     // Escutar mudanças no estado de autenticação
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setUser(session?.user ?? null);
       if (session?.user?.email) {
-        verificarAdmin(session.user.email);
+        await verificarAdmin(session.user.email);
       } else {
         setIsAdmin(false);
       }
@@ -35,6 +40,11 @@ export default function Header() {
   }, []);
 
   const verificarAdmin = async (email: string) => {
+    if (!email) {
+      setIsAdmin(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/admin/verificar', {
         method: 'POST',
@@ -46,9 +56,12 @@ export default function Header() {
       
       if (response.ok) {
         const data = await response.json();
-        setIsAdmin(data.isAdmin || false);
+        setIsAdmin(data.isAdmin === true);
+      } else {
+        setIsAdmin(false);
       }
     } catch (error) {
+      console.error('erro ao verificar admin:', error);
       setIsAdmin(false);
     }
   };

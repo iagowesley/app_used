@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
+import { getSiteUrl } from '@/lib/utils';
 import styles from './login.module.css';
 
 export default function Login() {
@@ -74,10 +75,16 @@ export default function Login() {
     setLoadingGoogle(true);
 
     try {
+      const redirectUrl = getSiteUrl();
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/`,
+          redirectTo: `${redirectUrl}/`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 
@@ -94,8 +101,9 @@ export default function Login() {
     setEnviandoEmail(true);
 
     try {
+      const redirectUrl = getSiteUrl();
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/login?reset=true`,
+        redirectTo: `${redirectUrl}/login?reset=true`,
       });
 
       if (error) throw error;

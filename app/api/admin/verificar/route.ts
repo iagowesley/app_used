@@ -14,7 +14,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const admin = isAdmin(email);
+    // Normalizar email (lowercase e trim)
+    const emailNormalizado = email.trim().toLowerCase();
+    
+    // Verificar se é admin
+    const admin = isAdmin(emailNormalizado);
+    
+    // Log para debug (remover em produção se necessário)
+    if (process.env.NODE_ENV === 'development') {
+      console.log(`[admin check] email: ${emailNormalizado}, isAdmin: ${admin}`);
+    }
 
     return NextResponse.json({ isAdmin: admin });
   } catch (error) {

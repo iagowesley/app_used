@@ -29,8 +29,19 @@ const getAdminEmails = (): string[] => {
  */
 export function isAdmin(email: string | undefined): boolean {
   if (!email) return false;
+  
+  // Normalizar email
+  const emailNormalizado = email.trim().toLowerCase();
+  
   const adminEmails = getAdminEmails();
-  return adminEmails.includes(email.toLowerCase());
+  const isAdminUser = adminEmails.includes(emailNormalizado);
+  
+  // Log para debug (remover em produção se necessário)
+  if (process.env.NODE_ENV === 'development') {
+    console.log(`[isAdmin] checking: ${emailNormalizado}, admin emails: ${adminEmails.join(', ')}, result: ${isAdminUser}`);
+  }
+  
+  return isAdminUser;
 }
 
 /**

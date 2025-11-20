@@ -25,6 +25,23 @@ export function gerarUrlProduto(id: number, nome: string): string {
 }
 
 /**
+ * Obtém a URL base do site
+ * Prioriza NEXT_PUBLIC_SITE_URL (configurado no Netlify)
+ * Se não estiver disponível, usa window.location.origin (funciona automaticamente)
+ * 
+ * Use esta função sempre que precisar da URL do site para redirecionamentos
+ */
+export function getSiteUrl(): string {
+  // Em server-side, tentar usar a variável de ambiente
+  if (typeof window === 'undefined') {
+    return process.env.NEXT_PUBLIC_SITE_URL || '';
+  }
+  
+  // Em client-side, priorizar variável de ambiente, senão usar window.location.origin
+  return process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+}
+
+/**
  * Extrai o ID da URL do produto
  * Ex: "/produto/123/bicicleta-aro-26" -> 123
  */

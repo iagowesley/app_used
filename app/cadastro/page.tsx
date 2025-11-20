@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { validarSenhaForte, validarEmail } from '@/lib/security';
+import { getSiteUrl } from '@/lib/utils';
 import styles from './cadastro.module.css';
 
 export default function Cadastro() {
@@ -151,10 +152,16 @@ export default function Cadastro() {
     setLoadingGoogle(true);
 
     try {
+      const redirectUrl = getSiteUrl();
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/cadastro`,
+          redirectTo: `${redirectUrl}/cadastro`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
         },
       });
 
