@@ -142,7 +142,7 @@ export default function AdminDashboard() {
             onClick={() => router.push('/')}
             className={styles.backButton}
           >
-            ← voltar
+            voltar
           </button>
         </div>
 
