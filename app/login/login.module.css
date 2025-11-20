@@ -1,4 +1,5 @@
 .container {
+  border: 1px solid green !important;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -141,6 +142,7 @@
 
 @media (max-width: 1024px) {
   .rightSection {
+    
     width: 100%;
     max-width: 480px;
     flex-shrink: 1;
@@ -159,6 +161,12 @@
   justify-content: center;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .formCard {
+    padding: 25px;
+  }
 }
 
 .loadingContainer {
