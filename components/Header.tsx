@@ -9,21 +9,49 @@ import styles from './Header.module.css';
 
 export default function Header() {
   const [user, setUser] = useState<any>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     // Verificar se há usuário logado
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
+      if (user?.email) {
+        verificarAdmin(user.email);
+      }
     });
 
     // Escutar mudanças no estado de autenticação
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
+      if (session?.user?.email) {
+        verificarAdmin(session.user.email);
+      } else {
+        setIsAdmin(false);
+      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const verificarAdmin = async (email: string) => {
+    try {
+      const response = await fetch('/api/admin/verificar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setIsAdmin(data.isAdmin || false);
+      }
+    } catch (error) {
+      setIsAdmin(false);
+    }
+  };
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -41,6 +69,11 @@ export default function Header() {
         <nav className={styles.nav}>
           {user ? (
             <>
+              {isAdmin && (
+                <Link href="/admin/dashboard" className={styles.btnAdmin}>
+                  dashboard
+                </Link>
+              )}
               <Link href="/novo-anuncio" className={styles.btnAnunciar}>
                 anunciar
               </Link>

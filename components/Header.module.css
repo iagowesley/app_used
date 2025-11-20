@@ -50,6 +50,23 @@
   align-items: center;
 }
 
+.btnAdmin {
+  background-color: #6c757d;
+  color: white;
+  padding: 14px 28px;
+  border-radius: var(--border-radius);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+  font-size: 16px;
+  text-transform: lowercase;
+}
+
+.btnAdmin:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+
 .btnAnunciar {
   background-color: var(--color-accent);
   color: white;
@@ -139,6 +156,11 @@
   }
 
   .btnLogin, .btnCadastro {
+    padding: 10px 16px;
+    font-size: 14px;
+  }
+
+  .btnAdmin {
     padding: 10px 16px;
     font-size: 14px;
   }
