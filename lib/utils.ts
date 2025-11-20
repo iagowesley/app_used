@@ -30,15 +30,21 @@ export function gerarUrlProduto(id: number, nome: string): string {
  * Se não estiver disponível, usa window.location.origin (funciona automaticamente)
  * 
  * Use esta função sempre que precisar da URL do site para redirecionamentos
+ * 
+ * @returns URL válida do site (sem barra final)
  */
 export function getSiteUrl(): string {
-  // Em server-side, tentar usar a variável de ambiente
-  if (typeof window === 'undefined') {
-    return process.env.NEXT_PUBLIC_SITE_URL || '';
+  // Em client-side, priorizar variável de ambiente, senão usar window.location.origin
+  if (typeof window !== 'undefined') {
+    const url = process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+    // Remover barra final se houver e garantir que seja uma URL válida
+    return url.replace(/\/+$/, '');
   }
   
-  // Em client-side, priorizar variável de ambiente, senão usar window.location.origin
-  return process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
+  // Em server-side, usar variável de ambiente ou retornar string vazia
+  // (não podemos usar window.location.origin em server-side)
+  const url = process.env.NEXT_PUBLIC_SITE_URL || '';
+  return url.replace(/\/+$/, '');
 }
 
 /**

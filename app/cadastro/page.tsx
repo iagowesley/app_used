@@ -152,12 +152,20 @@ export default function Cadastro() {
     setLoadingGoogle(true);
 
     try {
-      const redirectUrl = getSiteUrl();
+      const baseUrl = getSiteUrl();
+      
+      // Validar que temos uma URL válida
+      if (!baseUrl || baseUrl.trim() === '') {
+        throw new Error('URL do site não configurada. Configure NEXT_PUBLIC_SITE_URL no Netlify.');
+      }
+      
+      // Construir URL de redirecionamento (garantir que não tenha barras duplas)
+      const redirectTo = `${baseUrl}/cadastro`.replace(/\/+/g, '/');
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${redirectUrl}/cadastro`,
+          redirectTo,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',

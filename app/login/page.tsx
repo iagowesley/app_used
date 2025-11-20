@@ -75,12 +75,20 @@ export default function Login() {
     setLoadingGoogle(true);
 
     try {
-      const redirectUrl = getSiteUrl();
+      const baseUrl = getSiteUrl();
+      
+      // Validar que temos uma URL válida
+      if (!baseUrl || baseUrl.trim() === '') {
+        throw new Error('URL do site não configurada. Configure NEXT_PUBLIC_SITE_URL no Netlify.');
+      }
+      
+      // Construir URL de redirecionamento (garantir que não tenha barras duplas)
+      const redirectTo = `${baseUrl}/`.replace(/\/+/g, '/');
       
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${redirectUrl}/`,
+          redirectTo,
           queryParams: {
             access_type: 'offline',
             prompt: 'consent',
@@ -101,9 +109,18 @@ export default function Login() {
     setEnviandoEmail(true);
 
     try {
-      const redirectUrl = getSiteUrl();
+      const baseUrl = getSiteUrl();
+      
+      // Validar que temos uma URL válida
+      if (!baseUrl || baseUrl.trim() === '') {
+        throw new Error('URL do site não configurada. Configure NEXT_PUBLIC_SITE_URL no Netlify.');
+      }
+      
+      // Construir URL de redirecionamento (garantir que não tenha barras duplas)
+      const redirectTo = `${baseUrl}/login?reset=true`.replace(/\/+/g, '/');
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${redirectUrl}/login?reset=true`,
+        redirectTo,
       });
 
       if (error) throw error;
