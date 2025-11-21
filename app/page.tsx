@@ -40,20 +40,20 @@ export default function Home() {
     if (!produto.vendido || !produto.data_vendido) {
       return true; // Produto não vendido, sempre visível
     }
-    
+
     const dataVendido = new Date(produto.data_vendido);
     const agora = new Date();
     const diferencaHoras = (agora.getTime() - dataVendido.getTime()) / (1000 * 60 * 60);
-    
+
     return diferencaHoras <= 24; // Visível se vendido há menos de 24 horas
   };
 
   const executarBusca = async () => {
     setBuscando(true);
-    
+
     // Simular loading de 2 segundos
     await new Promise(resolve => setTimeout(resolve, 2000));
-    
+
     // Aplicar o termo de busca
     setTermoBusca(busca);
     setBuscando(false);
@@ -64,7 +64,7 @@ export default function Home() {
     if (!produtoAindaVisivel(produto)) {
       return false;
     }
-    
+
     const matchBusca = !termoBusca || produto.nome.toLowerCase().includes(termoBusca.toLowerCase());
     const matchCategoria = !categoriaSelecionada || produto.categoria === categoriaSelecionada;
     return matchBusca && matchCategoria;
@@ -85,12 +85,12 @@ export default function Home() {
                 marketplace minimalista para itens usados e seminovos
               </p>
               <p className={styles.heroDescription}>
-                compre e venda produtos de forma simples, rápida e direta. 
+                compre e venda produtos de forma simples, rápida e direta.
                 sem complicações. apenas você, o produto e o comprador.
               </p>
             </div>
           </div>
-          
+
           {/* Cards de Benefícios */}
           <div className={styles.benefitsCards}>
             <div className={styles.benefitCard}>
@@ -100,7 +100,7 @@ export default function Home() {
                 anuncie em minutos. sem burocracias ou complicações.
               </p>
             </div>
-            
+
             <div className={styles.benefitCard}>
               <img src="/bolsa-de-dinheiro.png" alt="economize" className={styles.benefitIcon} />
               <h3 className={styles.benefitTitle}>economize dinheiro</h3>
@@ -108,7 +108,7 @@ export default function Home() {
                 encontre produtos por preços muito mais acessíveis.
               </p>
             </div>
-            
+
             <div className={styles.benefitCard}>
               <img src="/energia-sustentavel.png" alt="sustentável" className={styles.benefitIcon} />
               <h3 className={styles.benefitTitle}>sustentável</h3>
@@ -116,7 +116,7 @@ export default function Home() {
                 dê nova vida aos produtos e contribua para um consumo mais consciente.
               </p>
             </div>
-            
+
             <div className={styles.benefitCard}>
               <img src="/direto.png" alt="direto" className={styles.benefitIcon} />
               <h3 className={styles.benefitTitle}>direto com o vendedor</h3>
@@ -128,68 +128,96 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container">
-        <div className={styles.header}>
-          <h2 className={styles.title}>todos os anúncios</h2>
-          <div className={styles.searchContainer}>
-            <input
-              type="text"
-              placeholder="buscar por nome..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' && !buscando) {
-                  executarBusca();
-                }
-              }}
-              className={styles.searchInput}
-              disabled={buscando}
-            />
-            <button 
-              className={styles.searchButton}
-              onClick={executarBusca}
-              disabled={buscando}
-              aria-label="pesquisar"
+      <div className={styles.contentWrapper}>
+        {/* Espaço de Publicidade - Esquerda */}
+        <aside className={styles.sidebar}>
+          <div className={styles.adContainer}>
+            <p className={styles.adText}>
+              ANUNCIE AQUI SEU PRODUTO, LOJA OU SERVIÇO
+            </p>
+            <p className={styles.adContact}>
+              FALE CONOSCO (88) 9 81879814
+            </p>
+          </div>
+        </aside>
+
+        <div className="container">
+          <div className={styles.header}>
+            <h2 className={styles.title}>todos os anúncios</h2>
+            <div className={styles.searchContainer}>
+              <input
+                type="text"
+                placeholder="buscar por nome..."
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !buscando) {
+                    executarBusca();
+                  }
+                }}
+                className={styles.searchInput}
+                disabled={buscando}
+              />
+              <button
+                className={styles.searchButton}
+                onClick={executarBusca}
+                disabled={buscando}
+                aria-label="pesquisar"
+              >
+                {buscando ? 'buscando...' : 'buscar'}
+              </button>
+            </div>
+          </div>
+
+          {/* Filtros de Categoria */}
+          <div className={styles.filterContainer}>
+            <button
+              onClick={() => setCategoriaSelecionada('')}
+              className={`${styles.filterButton} ${!categoriaSelecionada ? styles.filterButtonActive : ''}`}
             >
-              {buscando ? 'buscando...' : 'buscar'}
+              todas
             </button>
+            {CATEGORIAS.map((cat) => (
+              <button
+                key={cat.value}
+                onClick={() => setCategoriaSelecionada(cat.value)}
+                className={`${styles.filterButton} ${categoriaSelecionada === cat.value ? styles.filterButtonActive : ''}`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+
+          <div className={styles.productsSection}>
+            {loading || buscando ? (
+              <div className={styles.loading}>
+                <div className="loading"></div>
+              </div>
+            ) : produtosFiltrados.length === 0 ? (
+              <p className={styles.empty}>
+                {termoBusca ? 'nenhum anúncio encontrado para sua busca' : 'nenhum anúncio encontrado'}
+              </p>
+            ) : (
+              <div className="products-grid">
+                {produtosFiltrados.map((produto) => (
+                  <ProductCard key={produto.id} produto={produto} />
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
-        {/* Filtros de Categoria */}
-        <div className={styles.filterContainer}>
-          <button
-            onClick={() => setCategoriaSelecionada('')}
-            className={`${styles.filterButton} ${!categoriaSelecionada ? styles.filterButtonActive : ''}`}
-          >
-            todas
-          </button>
-          {CATEGORIAS.map((cat) => (
-            <button
-              key={cat.value}
-              onClick={() => setCategoriaSelecionada(cat.value)}
-              className={`${styles.filterButton} ${categoriaSelecionada === cat.value ? styles.filterButtonActive : ''}`}
-            >
-              {cat.label}
-            </button>
-          ))}
-        </div>
-
-      {loading || buscando ? (
-        <div className={styles.loading}>
-          <div className="loading"></div>
-        </div>
-      ) : produtosFiltrados.length === 0 ? (
-        <p className={styles.empty}>
-          {termoBusca ? 'nenhum anúncio encontrado para sua busca' : 'nenhum anúncio encontrado'}
-        </p>
-      ) : (
-        <div className="products-grid">
-          {produtosFiltrados.map((produto) => (
-            <ProductCard key={produto.id} produto={produto} />
-          ))}
-        </div>
-      )}
+        {/* Espaço de Publicidade - Direita */}
+        <aside className={styles.sidebar}>
+          <div className={styles.adContainer}>
+            <p className={styles.adText}>
+              ANUNCIE AQUI SEU PRODUTO, LOJA OU SERVIÇO
+            </p>
+            <p className={styles.adContact}>
+              FALE CONOSCO (88) 9 81879814
+            </p>
+          </div>
+        </aside>
       </div>
     </>
   );
