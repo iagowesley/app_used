@@ -103,7 +103,9 @@ export async function GET(request: NextRequest) {
       produtos: produtos || [],
     });
   } catch (error: any) {
-    console.error('erro ao buscar dados do dashboard:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('erro ao buscar dados do dashboard:', error);
+    }
     return NextResponse.json(
       { erro: error.message },
       { status: 500 }

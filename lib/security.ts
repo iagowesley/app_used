@@ -249,3 +249,54 @@ export function escaparHTML(texto: string): string {
   return texto.replace(/[&<>"'/]/g, (char) => mapa[char]);
 }
 
+/**
+ * Valida categoria contra whitelist
+ */
+export function validarCategoria(categoria: string, categoriasValidas: readonly { value: string }[]): boolean {
+  if (!categoria) return false;
+  return categoriasValidas.some(c => c.value === categoria);
+}
+
+/**
+ * Valida condição contra whitelist
+ */
+export function validarCondicao(condicao: string, condicoesValidas: readonly { value: string }[]): boolean {
+  if (!condicao) return false;
+  return condicoesValidas.some(c => c.value === condicao);
+}
+
+/**
+ * Valida formas de pagamento contra whitelist
+ */
+export function validarFormasPagamento(formas: string[], formasValidas: readonly { value: string }[]): { valido: boolean; mensagem?: string } {
+  if (!formas || formas.length === 0) {
+    return { valido: false, mensagem: 'selecione pelo menos uma forma de pagamento' };
+  }
+  
+  const valoresValidos = formasValidas.map(f => f.value);
+  const formasInvalidas = formas.filter(f => !valoresValidos.includes(f));
+  
+  if (formasInvalidas.length > 0) {
+    return { valido: false, mensagem: `formas de pagamento inválidas: ${formasInvalidas.join(', ')}` };
+  }
+  
+  return { valido: true };
+}
+
+/**
+ * Valida array de URLs de imagens
+ */
+export function validarUrlsImagens(urls: string[]): { valido: boolean; mensagem?: string } {
+  if (!urls || !Array.isArray(urls)) {
+    return { valido: false, mensagem: 'urls de imagens inválidas' };
+  }
+  
+  for (const url of urls) {
+    if (!validarUrlSupabase(url)) {
+      return { valido: false, mensagem: 'url de imagem inválida ou não é do Supabase Storage' };
+    }
+  }
+  
+  return { valido: true };
+}
+

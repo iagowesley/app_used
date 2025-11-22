@@ -27,7 +27,9 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ isAdmin: admin });
   } catch (error) {
-    console.error('erro ao verificar admin:', error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error('erro ao verificar admin:', error);
+    }
     return NextResponse.json(
       { isAdmin: false },
       { status: 500 }

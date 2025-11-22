@@ -113,7 +113,7 @@ export default function ProdutoDetalhes() {
       
       // Confirmar com usuário e abrir WhatsApp Web
       const confirmar = window.confirm(
-        '✅ Link copiado!\n\n' +
+        'Link copiado!\n\n' +
         'Deseja abrir o WhatsApp para compartilhar com seus amigos?'
       );
       
@@ -169,15 +169,20 @@ export default function ProdutoDetalhes() {
       }
       
       // Deletar produto do banco via API route (usa supabaseAdmin que bypassa RLS)
+      // Obter token JWT para autenticação
+      const { data: { session } } = await supabase.auth.getSession();
+      const token = session?.access_token;
+      
+      if (!token) {
+        throw new Error('não autenticado. faça login novamente.');
+      }
+      
       const response = await fetch(`/api/anuncios/${produto.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          userEmail: user.email,
-          userId: user.id,
-        }),
       });
       
       if (!response.ok) {
