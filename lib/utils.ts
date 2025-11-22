@@ -55,3 +55,25 @@ export function extrairIdDaUrl(params: { id: string }): number {
   return parseInt(params.id, 10);
 }
 
+/**
+ * Gera URL completa do produto para compartilhamento
+ */
+export function gerarUrlCompletaProduto(id: number, nome: string): string {
+  const slug = gerarSlug(nome);
+  const siteUrl = typeof window !== 'undefined' 
+    ? window.location.origin 
+    : process.env.NEXT_PUBLIC_SITE_URL || '';
+  return `${siteUrl}/produto/${id}/${slug}`;
+}
+
+/**
+ * Gera mensagem de compartilhamento para o produto
+ */
+export function gerarMensagemCompartilhamento(nome: string, preco: number, url: string): string {
+  return `🔔 Olha que oportunidade incrível que encontrei!\n\n` +
+         `✨ ${nome}\n` +
+         `💰 Apenas R$ ${preco.toFixed(2)}\n\n` +
+         `👉 Confira aqui: ${url}\n\n` +
+         `💬 Mostre pro seu amigo que tá precisando! Compartilhe e indique! 😊`;
+}
+

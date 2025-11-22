@@ -16,6 +16,7 @@ interface Estatisticas {
   valorTotalGeral: number;
   anunciosPorCategoria: Record<string, number>;
   anunciosPorCondicao: Record<string, number>;
+  vendasPorCidade?: Record<string, { quantidade: number; valor: number }>;
 }
 
 export default function AdminDashboard() {
@@ -182,6 +183,32 @@ export default function AdminDashboard() {
             <div className={styles.statCard}>
               <h3 className={styles.statTitle}>valor total geral</h3>
               <p className={styles.statValue}>{formatarMoeda(estatisticas.valorTotalGeral)}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Vendas por Cidade */}
+        {estatisticas && estatisticas.vendasPorCidade && Object.keys(estatisticas.vendasPorCidade).length > 0 && (
+          <div className={styles.cidadeSection}>
+            <h2 className={styles.sectionTitle}>vendas por cidade</h2>
+            <div className={styles.cidadeGrid}>
+              {Object.entries(estatisticas.vendasPorCidade)
+                .sort((a, b) => b[1].quantidade - a[1].quantidade)
+                .map(([cidade, dados]) => (
+                  <div key={cidade} className={styles.cidadeCard}>
+                    <h3 className={styles.cidadeNome}>{cidade}</h3>
+                    <div className={styles.cidadeStats}>
+                      <div className={styles.cidadeStat}>
+                        <span className={styles.cidadeLabel}>vendas:</span>
+                        <span className={styles.cidadeValue}>{dados.quantidade}</span>
+                      </div>
+                      <div className={styles.cidadeStat}>
+                        <span className={styles.cidadeLabel}>valor total:</span>
+                        <span className={styles.cidadeValue}>{formatarMoeda(dados.valor)}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         )}

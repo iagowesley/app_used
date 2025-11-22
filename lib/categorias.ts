@@ -63,3 +63,30 @@ export const getFormaPagamentoEmoji = (value: string): string => {
   return forma ? forma.emoji : '';
 };
 
+// Cidades do Vale do Jaguaribe - CE (ordenadas alfabeticamente)
+export const CIDADES_VALE_JAGUARIBE = [
+  { value: 'alto santo', label: 'alto santo' },
+  { value: 'aracati', label: 'aracati' },
+  { value: 'ererê', label: 'ererê' },
+  { value: 'fortim', label: 'fortim' },
+  { value: 'ibicuitinga', label: 'ibicuitinga' },
+  { value: 'icapuí', label: 'icapuí' },
+  { value: 'iracema', label: 'iracema' },
+  { value: 'itaiçaba', label: 'itaiçaba' },
+  { value: 'jaguaretama', label: 'jaguaretama' },
+  { value: 'jaguaribara', label: 'jaguaribara' },
+  { value: 'jaguaribe', label: 'jaguaribe' },
+  { value: 'jaguaruana', label: 'jaguaruana' },
+  { value: 'limoeiro do norte', label: 'limoeiro do norte' },
+  { value: 'morada nova', label: 'morada nova' },
+  { value: 'palhano', label: 'palhano' },
+  { value: 'pereiro', label: 'pereiro' },
+  { value: 'potiretama', label: 'potiretama' },
+  { value: 'quixeré', label: 'quixeré' },
+  { value: 'russas', label: 'russas' },
+  { value: 'são joão do jaguaribe', label: 'são joão do jaguaribe' },
+  { value: 'tabuleiro do norte', label: 'tabuleiro do norte' },
+] as const;
+
+export type CidadeValeJaguaribeValue = typeof CIDADES_VALE_JAGUARIBE[number]['value'];
+

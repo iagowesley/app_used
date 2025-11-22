@@ -8,6 +8,7 @@
 .perfilContainer {
   max-width: 1200px;
   margin: 0 auto;
+  padding-top: 40px;
 }
 
 .header {
@@ -15,6 +16,7 @@
   border-radius: var(--border-radius-large);
   padding: 32px;
   margin-bottom: 32px;
+  margin-top: 40px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
   display: flex;
   justify-content: space-between;

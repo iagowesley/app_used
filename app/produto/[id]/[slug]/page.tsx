@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { supabase, Produto } from '@/lib/supabase';
 import Carousel from '@/components/Carousel';
-import { extrairIdDaUrl } from '@/lib/utils';
+import { extrairIdDaUrl, gerarUrlCompletaProduto, gerarMensagemCompartilhamento } from '@/lib/utils';
 import ConfirmModal from '@/components/ConfirmModal';
 import { getCategoriaLabel, getCondicaoLabel, getCondicaoEmoji, getFormaPagamentoLabel, getFormaPagamentoEmoji } from '@/lib/categorias';
 import styles from './produto.module.css';
@@ -89,6 +89,56 @@ export default function ProdutoDetalhes() {
     
     // Abrir WhatsApp
     window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
+  };
+
+  const compartilharAnuncio = async () => {
+    if (!produto) return;
+
+    const url = gerarUrlCompletaProduto(produto.id, produto.nome);
+    const mensagem = gerarMensagemCompartilhamento(produto.nome, produto.preco, url);
+
+    try {
+      // Tentar usar Web Share API se disponível (mobile principalmente)
+      if (navigator.share) {
+        await navigator.share({
+          title: `Confira: ${produto.nome}`,
+          text: mensagem,
+          url: url,
+        });
+        return;
+      }
+
+      // Fallback: copiar para área de transferência e abrir WhatsApp
+      await navigator.clipboard.writeText(`${mensagem}\n${url}`);
+      
+      // Confirmar com usuário e abrir WhatsApp Web
+      const confirmar = window.confirm(
+        '✅ Link copiado!\n\n' +
+        'Deseja abrir o WhatsApp para compartilhar com seus amigos?'
+      );
+      
+      if (confirmar) {
+        const numero = produto.whatsapp.replace(/\D/g, '');
+        const mensagemWhatsApp = encodeURIComponent(mensagem);
+        window.open(`https://wa.me/?text=${mensagemWhatsApp}`, '_blank');
+      } else {
+        alert('✅ Link copiado! Agora você pode colar e compartilhar onde quiser!');
+      }
+    } catch (error: any) {
+      // Se o usuário cancelar o compartilhamento, não fazer nada
+      if (error.name === 'AbortError') {
+        return;
+      }
+      
+      // Caso contrário, tentar copiar para área de transferência
+      try {
+        await navigator.clipboard.writeText(`${mensagem}\n${url}`);
+        alert('✅ Link copiado! Agora você pode colar e compartilhar onde quiser!');
+      } catch (clipboardError) {
+        // Fallback final: mostrar mensagem manual
+        prompt('Copie o link abaixo para compartilhar:', `${mensagem}\n${url}`);
+      }
+    }
   };
 
   const abrirModalDeletar = () => {
@@ -262,7 +312,26 @@ export default function ProdutoDetalhes() {
                 {getCondicaoEmoji(produto.condicao)} {getCondicaoLabel(produto.condicao)}
               </span>
             )}
+
+            {/* Informação de Entrega */}
+            {produto.faz_entrega && (
+              <span className={styles.tagEntrega}>
+                vendedor faz entrega
+              </span>
+            )}
           </div>
+
+          {/* Informações de Localização */}
+          {(produto.cidade || produto.bairro) && (
+            <div className={styles.localizacaoSection}>
+              <span className={styles.localizacaoLabel}>localização:</span>
+              <span className={styles.localizacaoInfo}>
+                {produto.bairro && produto.cidade 
+                  ? `${produto.bairro}, ${produto.cidade}`
+                  : produto.cidade || produto.bairro}
+              </span>
+            </div>
+          )}
 
           {/* Formas de Pagamento */}
           {produto.formas_pagamento && produto.formas_pagamento.length > 0 && (
@@ -278,23 +347,15 @@ export default function ProdutoDetalhes() {
             </div>
           )}
 
-          {/* Informação de Entrega */}
-          {produto.faz_entrega && (
-            <div className={styles.entregaSection}>
-              <span className={styles.tagEntrega}>
-                 vendedor faz entrega
-              </span>
-            </div>
-          )}
-
           <div className={styles.descricaoContainer}>
             <h2 className={styles.subtitle}>descrição</h2>
             <p className={styles.descricao}>{produto.descricao}</p>
           </div>
 
-          {/* Botão de Comprar via WhatsApp */}
-          {produto.vendido && !isProprietario ? (
-            <>
+          {/* Container dos Botões */}
+          <div className={styles.buttonsContainer}>
+            {/* Botão de Comprar via WhatsApp */}
+            {produto.vendido && !isProprietario ? (
               <button 
                 disabled
                 className={`${styles.whatsappButton} ${styles.whatsappButtonDisabled}`}
@@ -302,23 +363,31 @@ export default function ProdutoDetalhes() {
                 <img src="/cadeado-trancado.png" alt="vendido" className={styles.lockIcon} />
                 produto vendido
               </button>
-              <p className={styles.info}>
-                este produto já foi vendido
-              </p>
-            </>
-          ) : (
-            <>
+            ) : (
               <button 
                 onClick={abrirWhatsApp}
                 className={styles.whatsappButton}
               >
                 comprar via whatsapp
               </button>
-              <p className={styles.info}>
-                ao clicar, você será direcionado para conversar com o vendedor
-              </p>
-            </>
-          )}
+            )}
+            
+            {/* Botão de Compartilhar */}
+            <button 
+              onClick={compartilharAnuncio}
+              className={styles.shareButton}
+            >
+              compartilhar anúncio
+            </button>
+          </div>
+          
+          <p className={styles.info}>
+            {produto.vendido && !isProprietario 
+              ? 'este produto já foi vendido'
+              : 'ao clicar em comprar, você será direcionado para conversar com o vendedor'
+            }
+          </p>
+        
         </div>
       </div>
 

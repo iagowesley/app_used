@@ -66,6 +66,19 @@ export async function GET(request: NextRequest) {
       anunciosPorCondicao[condicao] = (anunciosPorCondicao[condicao] || 0) + 1;
     });
     
+    // Vendas por cidade (apenas produtos vendidos)
+    const vendasPorCidade: Record<string, { quantidade: number; valor: number }> = {};
+    produtos?.forEach(p => {
+      if (p.vendido && p.cidade) {
+        const cidade = p.cidade.toLowerCase() || 'sem cidade';
+        if (!vendasPorCidade[cidade]) {
+          vendasPorCidade[cidade] = { quantidade: 0, valor: 0 };
+        }
+        vendasPorCidade[cidade].quantidade += 1;
+        vendasPorCidade[cidade].valor += p.preco || 0;
+      }
+    });
+    
     // Anúncios recentes (últimos 7 dias)
     const seteDiasAtras = new Date();
     seteDiasAtras.setDate(seteDiasAtras.getDate() - 7);
@@ -85,6 +98,7 @@ export async function GET(request: NextRequest) {
         valorTotalGeral,
         anunciosPorCategoria,
         anunciosPorCondicao,
+        vendasPorCidade,
       },
       produtos: produtos || [],
     });

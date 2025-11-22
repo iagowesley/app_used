@@ -257,3 +257,88 @@
   }
 }
 
+/* Seção de Vendas por Cidade */
+.cidadeSection {
+  background: white;
+  border-radius: var(--border-radius-large);
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: lowercase;
+  margin: 0 0 24px 0;
+}
+
+.cidadeGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+.cidadeCard {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  border: 2px solid #e0e0e0;
+  transition: all 0.3s ease;
+}
+
+.cidadeCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-accent);
+}
+
+.cidadeNome {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-text);
+  text-transform: capitalize;
+  margin: 0 0 16px 0;
+}
+
+.cidadeStats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cidadeStat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cidadeLabel {
+  font-size: 14px;
+  color: var(--color-text-light);
+  text-transform: lowercase;
+  font-weight: 500;
+}
+
+.cidadeValue {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+@media (max-width: 768px) {
+  .cidadeGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .cidadeSection {
+    padding: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+  }
+}
+

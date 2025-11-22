@@ -12,7 +12,7 @@ import {
   validarImagem,
   validarQuantidadeImagens
 } from '@/lib/security';
-import { CATEGORIAS, CONDICOES, FORMAS_PAGAMENTO } from '@/lib/categorias';
+import { CATEGORIAS, CONDICOES, FORMAS_PAGAMENTO, CIDADES_VALE_JAGUARIBE } from '@/lib/categorias';
 import styles from './novo-anuncio.module.css';
 
 export default function NovoAnuncio() {
@@ -255,6 +255,12 @@ export default function NovoAnuncio() {
 
   return (
     <div className={styles.container}>
+      <button 
+        onClick={() => router.back()} 
+        className={styles.backButton}
+      >
+        voltar
+      </button>
       <div className={styles.formCard}>
         <h1 className={styles.title}>criar anúncio</h1>
         <p className={styles.subtitle}>preencha os dados do seu produto</p>
@@ -406,15 +412,29 @@ export default function NovoAnuncio() {
               {/* Cidade */}
               <div className="form-group">
                 <label htmlFor="cidade">cidade</label>
-                <input
+                <select
                   id="cidade"
-                  type="text"
                   value={cidade}
                   onChange={(e) => setCidade(e.target.value)}
-                  placeholder="ex: são paulo"
                   required
                   disabled={loading}
-                />
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid #ddd',
+                    fontSize: '16px',
+                    backgroundColor: loading ? '#f5f5f5' : 'white',
+                    cursor: loading ? 'not-allowed' : 'pointer'
+                  }}
+                >
+                  <option value="">selecione uma cidade</option>
+                  {CIDADES_VALE_JAGUARIBE.map((cidadeOption) => (
+                    <option key={cidadeOption.value} value={cidadeOption.value}>
+                      {cidadeOption.label}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               {/* Bairro */}
@@ -434,7 +454,7 @@ export default function NovoAnuncio() {
               {/* Nome do Vendedor - Full Width */}
               <div className={`form-group ${styles.fieldFullWidth}`}>
                 <label htmlFor="nomeVendedor">
-                  seu nome (opcional)
+                  seu nome
                 </label>
                 <input
                   id="nomeVendedor"
@@ -442,6 +462,7 @@ export default function NovoAnuncio() {
                   value={nomeVendedor}
                   onChange={(e) => setNomeVendedor(e.target.value)}
                   placeholder="ex: joão silva"
+                  required
                   disabled={loading}
                   maxLength={100}
                 />
