@@ -4,13 +4,13 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { 
-  sanitizeNomeProduto, 
-  sanitizeDescricao, 
-  validarPreco, 
+import {
+  sanitizeNomeProduto,
+  sanitizeDescricao,
+  validarPreco,
   validarWhatsApp,
   validarImagem,
-  validarQuantidadeImagens 
+  validarQuantidadeImagens
 } from '@/lib/security';
 import { CATEGORIAS, CONDICOES, FORMAS_PAGAMENTO } from '@/lib/categorias';
 import styles from './novo-anuncio.module.css';
@@ -24,6 +24,8 @@ export default function NovoAnuncio() {
   const [nomeVendedor, setNomeVendedor] = useState('');
   const [categoria, setCategoria] = useState('');
   const [condicao, setCondicao] = useState('');
+  const [cidade, setCidade] = useState('');
+  const [bairro, setBairro] = useState('');
   const [formasPagamento, setFormasPagamento] = useState<string[]>([]);
   const [fazEntrega, setFazEntrega] = useState(false);
   const [imagens, setImagens] = useState<File[]>([]);
@@ -47,7 +49,7 @@ export default function NovoAnuncio() {
   const formatarWhatsApp = (valor: string) => {
     // Remove tudo que não é número
     const numeros = valor.replace(/\D/g, '');
-    
+
     // Formata: XX X XXXX-XXXX
     if (numeros.length <= 2) {
       return numeros;
@@ -77,7 +79,7 @@ export default function NovoAnuncio() {
 
   const handleImagensChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    
+
     if (files.length === 0) return;
 
     // Validar quantidade
@@ -154,7 +156,7 @@ export default function NovoAnuncio() {
 
     try {
       // Validações de segurança
-      if (!nome || !descricao || !preco || !whatsapp || !categoria || !condicao) {
+      if (!nome || !descricao || !preco || !whatsapp || !categoria || !condicao || !cidade || !bairro) {
         throw new Error('todos os campos são obrigatórios');
       }
 
@@ -220,6 +222,8 @@ export default function NovoAnuncio() {
             nome_vendedor: nomeVendedorSanitizado ? nomeVendedorSanitizado.toLowerCase() : null,
             categoria: categoria,
             condicao: condicao,
+            cidade: cidade.toLowerCase(),
+            bairro: bairro.toLowerCase(),
             formas_pagamento: formasPagamento,
             faz_entrega: fazEntrega,
           },
@@ -229,7 +233,7 @@ export default function NovoAnuncio() {
 
       // Mostrar popup de sucesso
       setMostrarSucesso(true);
-      
+
       // Redirecionar para a página inicial após 2 segundos
       setTimeout(() => {
         router.push('/');
@@ -262,7 +266,7 @@ export default function NovoAnuncio() {
               <label className={styles.uploadLabel}>
                 fotos do produto (mínimo 3, máximo 6)
               </label>
-              
+
               {previewUrls.length > 0 ? (
                 <div className={styles.previewGrid}>
                   {previewUrls.map((url, indice) => (
@@ -288,7 +292,7 @@ export default function NovoAnuncio() {
                   </div>
                 </label>
               )}
-              
+
               <input
                 id="imagens"
                 type="file"
@@ -298,7 +302,7 @@ export default function NovoAnuncio() {
                 className={styles.fileInput}
                 disabled={loading}
               />
-              
+
               {previewUrls.length > 0 && (
                 <label htmlFor="imagens" className={styles.addMoreButton}>
                   + adicionar mais fotos
@@ -320,7 +324,7 @@ export default function NovoAnuncio() {
                   onChange={(e) => setCategoria(e.target.value)}
                   required
                   disabled={loading}
-                  style={{ 
+                  style={{
                     width: '100%',
                     padding: '12px',
                     borderRadius: '8px',
@@ -348,7 +352,7 @@ export default function NovoAnuncio() {
                   onChange={(e) => setCondicao(e.target.value)}
                   required
                   disabled={loading}
-                  style={{ 
+                  style={{
                     width: '100%',
                     padding: '12px',
                     borderRadius: '8px',
@@ -397,6 +401,34 @@ export default function NovoAnuncio() {
                   maxLength={15}
                 />
                 <small className={styles.hint}>formato: xx x xxxx-xxxx</small>
+              </div>
+
+              {/* Cidade */}
+              <div className="form-group">
+                <label htmlFor="cidade">cidade</label>
+                <input
+                  id="cidade"
+                  type="text"
+                  value={cidade}
+                  onChange={(e) => setCidade(e.target.value)}
+                  placeholder="ex: são paulo"
+                  required
+                  disabled={loading}
+                />
+              </div>
+
+              {/* Bairro */}
+              <div className="form-group">
+                <label htmlFor="bairro">bairro</label>
+                <input
+                  id="bairro"
+                  type="text"
+                  value={bairro}
+                  onChange={(e) => setBairro(e.target.value)}
+                  placeholder="ex: centro"
+                  required
+                  disabled={loading}
+                />
               </div>
 
               {/* Nome do Vendedor - Full Width */}
@@ -479,7 +511,7 @@ export default function NovoAnuncio() {
                     style={{ width: 'auto' }}
                   />
                   <span className={styles.checkboxText} style={{ fontSize: '16px', fontWeight: '500' }}>
-                     faço entrega do produto
+                    faço entrega do produto
                   </span>
                 </label>
                 <small className={styles.hint} style={{ marginLeft: '32px' }}>
@@ -491,8 +523,8 @@ export default function NovoAnuncio() {
             {/* Erro e Botão Submit */}
             {erro && <div className="error-message">{erro}</div>}
 
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               className={`primary ${styles.submitButton}`}
               disabled={loading}
             >
@@ -510,7 +542,7 @@ export default function NovoAnuncio() {
             <p className={styles.popupText}>
               seu anúncio foi cadastrado e já está disponível na plataforma.
             </p>
-            <button 
+            <button
               onClick={() => router.push('/')}
               className={styles.popupButton}
             >

@@ -46,13 +46,13 @@ export default function ProdutoDetalhes() {
 
   const abrirWhatsApp = () => {
     if (!produto) return;
-    
+
     // Remover formatação do WhatsApp
     const numero = produto.whatsapp.replace(/\D/g, '');
     const mensagem = encodeURIComponent(
       `Olá! Tenho interesse no produto: ${produto.nome} (R$ ${produto.preco.toFixed(2)})`
     );
-    
+
     // Abrir WhatsApp
     window.open(`https://wa.me/55${numero}?text=${mensagem}`, '_blank');
   };
@@ -62,18 +62,18 @@ export default function ProdutoDetalhes() {
       alert('você precisa estar logado para deletar este anúncio');
       return;
     }
-    
+
     // VERIFICAÇÃO DE SEGURANÇA: Apenas o proprietário pode deletar
     if (!verificarProprietario(user.id, produto.user_id)) {
       alert('você não tem permissão para deletar este anúncio');
       return;
     }
-    
+
     const confirmacao = window.confirm('tem certeza que deseja deletar este anúncio? esta ação não pode ser desfeita.');
     if (!confirmacao) return;
-    
+
     setDeletando(true);
-    
+
     try {
       // Verificar novamente antes de deletar (double-check)
       const { data: produtoAtual, error: fetchError } = await supabase
@@ -94,7 +94,7 @@ export default function ProdutoDetalhes() {
         .delete()
         .eq('id', produto.id)
         .eq('user_id', user.id); // Extra segurança
-      
+
       if (error) throw error;
 
       // Deletar imagens do storage APÓS deletar o produto
@@ -109,7 +109,7 @@ export default function ProdutoDetalhes() {
           // Continua mesmo se falhar ao deletar imagem
         }
       }
-      
+
       alert('anúncio deletado com sucesso!');
       router.push('/perfil');
     } catch (error: any) {
@@ -144,12 +144,12 @@ export default function ProdutoDetalhes() {
     <div className="container">
       <div className={styles.headerActions}>
         <button onClick={() => router.back()} className={styles.backButton}>
-           voltar
+          voltar
         </button>
-        
+
         {isProprietario && (
-          <button 
-            onClick={deletarAnuncio} 
+          <button
+            onClick={deletarAnuncio}
             className={styles.deleteButton}
             disabled={deletando}
           >
@@ -185,7 +185,7 @@ export default function ProdutoDetalhes() {
           {/* Botão de Comprar via WhatsApp */}
           {produto.vendido && !isProprietario ? (
             <>
-              <button 
+              <button
                 disabled
                 className={`${styles.whatsappButton} ${styles.whatsappButtonDisabled}`}
               >
@@ -198,7 +198,7 @@ export default function ProdutoDetalhes() {
             </>
           ) : (
             <>
-              <button 
+              <button
                 onClick={abrirWhatsApp}
                 className={styles.whatsappButton}
               >

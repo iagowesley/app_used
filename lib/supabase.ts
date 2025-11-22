@@ -25,17 +25,17 @@ export const supabase = createClient(
 // Use este cliente nas rotas API para evitar problemas com RLS
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-export const supabaseAdmin = supabaseServiceKey 
+export const supabaseAdmin = supabaseServiceKey
   ? createClient(
-      supabaseUrl || 'https://placeholder.supabase.co',
-      supabaseServiceKey,
-      {
-        auth: {
-          autoRefreshToken: false,
-          persistSession: false
-        }
+    supabaseUrl || 'https://placeholder.supabase.co',
+    supabaseServiceKey,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false
       }
-    )
+    }
+  )
   : supabase;
 
 // Tipos para o banco de dados
@@ -50,6 +50,8 @@ export interface Produto {
   nome_vendedor?: string | null; // Nome do vendedor (opcional)
   categoria: string; // Categoria do produto
   condicao: string; // Condição do produto (novo, seminovo, usado)
+  cidade?: string; // Cidade do vendedor
+  bairro?: string; // Bairro do vendedor
   formas_pagamento: string[]; // Formas de pagamento aceitas
   faz_entrega: boolean; // Se o vendedor faz entrega
   vendido?: boolean; // Se o produto foi vendido

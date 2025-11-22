@@ -412,17 +412,36 @@
 /* Filtros de Categoria */
 .filterContainer {
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
+  flex-direction: column;
+  gap: 20px;
   margin-bottom: 32px;
-  padding: 20px;
+  padding: 24px;
   background-color: #f8f9fa;
   border-radius: 12px;
   border: 1px solid #e9ecef;
 }
 
+.filterSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.filterLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text);
+  text-transform: lowercase;
+}
+
+.filterOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
 .filterButton {
-  padding: 10px 20px;
+  padding: 8px 16px;
   background-color: white;
   border: 2px solid #dee2e6;
   border-radius: 8px;
@@ -451,15 +470,96 @@
   border-color: #C66A4A;
 }
 
+.priceInputs {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.priceInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.3s ease;
+  max-width: 120px;
+}
+
+.priceInput:focus {
+  border-color: var(--color-accent);
+}
+
+.priceSeparator {
+  color: var(--color-text-light);
+  font-size: 14px;
+}
+
 @media (max-width: 768px) {
   .filterContainer {
     padding: 16px;
-    gap: 8px;
+    gap: 16px;
   }
 
   .filterButton {
     padding: 8px 16px;
     font-size: 13px;
+  }
+
+  .priceInputs {
+    width: 100%;
+  }
+
+  .priceInput {
+    max-width: none;
+  }
+}
+
+/* Styled Select */
+.selectWrapper {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.styledSelect {
+  width: 100%;
+  padding: 10px 40px 10px 16px;
+  appearance: none;
+  background-color: white;
+  border: 2px solid #dee2e6;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #495057;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: lowercase;
+}
+
+.styledSelect:hover {
+  border-color: #d97757;
+}
+
+.styledSelect:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 3px rgba(217, 119, 87, 0.1);
+}
+
+.selectArrow {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  color: var(--color-text-light);
+  font-size: 10px;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .selectWrapper {
+    max-width: 100%;
   }
 }
 
@@ -476,93 +576,4 @@
   font-size: 18px;
   margin-top: 80px;
   text-transform: lowercase;
-}
-
-/* Layout com Sidebar */
-.contentWrapper {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  max-width: 1920px;
-  /* Aumentado para acomodar 3 colunas */
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.contentWrapper .container {
-  margin: 0;
-  /* Remove margem automática pois o flex vai controlar */
-  flex: 1;
-  max-width: 1200px;
-  /* Mantém a largura original do conteúdo */
-}
-
-.productsSection {
-  width: 100%;
-}
-
-.sidebar {
-  width: 300px;
-  flex-shrink: 0;
-  position: sticky;
-  top: 24px;
-  height: fit-content;
-  margin-top: 120px;
-  /* Aumentado para ficar "um pouco mais pra baixo" */
-}
-
-.adContainer {
-  width: 100%;
-  min-height: 500px;
-  background-color: #f8f9fa;
-  border: 2px dashed #dee2e6;
-  border-radius: 12px;
-  display: flex;
-  flex-direction: column;
-  /* Alterado para coluna para empilhar texto e contato */
-  align-items: center;
-  justify-content: center;
-  padding: 32px;
-  text-align: center;
-  transition: all 0.3s ease;
-  gap: 16px;
-  /* Espaço entre os textos */
-}
-
-.adContainer:hover {
-  border-color: var(--color-accent);
-  background-color: #fff5ec;
-}
-
-.adText {
-  font-size: 24px;
-  font-weight: 700;
-  color: var(--color-text-light);
-  line-height: 1.4;
-  text-transform: uppercase;
-}
-
-.adContact {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--color-accent);
-  margin-top: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-@media (max-width: 1600px) {
-  .contentWrapper {
-    padding: 0;
-  }
-
-  .sidebar {
-    display: none;
-    /* Ocultar ambas as sidebars se não houver espaço */
-  }
-
-  .contentWrapper .container {
-    margin: 0 auto;
-    /* Volta a centralizar se a sidebar sumir */
-  }
 }

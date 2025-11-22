@@ -92,7 +92,7 @@
     align-items: center;
     justify-content: center;
     padding: 20px;
-    min-height: auto;
+    min-height: 85vh;
     width: 100%;
   }
 
@@ -239,6 +239,7 @@
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -249,6 +250,7 @@
     transform: translateY(20px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -320,4 +322,3 @@
   height: 20px;
   flex-shrink: 0;
 }
-

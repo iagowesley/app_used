@@ -14,6 +14,10 @@ export default function Home() {
   const [termoBusca, setTermoBusca] = useState(''); // Termo de busca aplicado
   const [buscando, setBuscando] = useState(false); // Loading da busca
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string>('');
+  const [cidadeSelecionada, setCidadeSelecionada] = useState('');
+  const [precoMin, setPrecoMin] = useState('');
+  const [precoMax, setPrecoMax] = useState('');
+  const [condicaoSelecionada, setCondicaoSelecionada] = useState('');
 
   useEffect(() => {
     carregarProdutos();
@@ -67,8 +71,24 @@ export default function Home() {
 
     const matchBusca = !termoBusca || produto.nome.toLowerCase().includes(termoBusca.toLowerCase());
     const matchCategoria = !categoriaSelecionada || produto.categoria === categoriaSelecionada;
-    return matchBusca && matchCategoria;
+
+    // Filtro de preço
+    const preco = produto.preco;
+    const min = precoMin ? parseFloat(precoMin) : 0;
+    const max = precoMax ? parseFloat(precoMax) : Infinity;
+    const matchPreco = preco >= min && preco <= max;
+
+    // Filtro de condição
+    const matchCondicao = !condicaoSelecionada || produto.condicao === condicaoSelecionada;
+
+    // Filtro de cidade
+    const matchCidade = !cidadeSelecionada || (produto.cidade && produto.cidade.toLowerCase() === cidadeSelecionada.toLowerCase());
+
+    return matchBusca && matchCategoria && matchPreco && matchCondicao && matchCidade;
   });
+
+  // Extrair cidades únicas dos produtos
+  const cidades = Array.from(new Set(produtos.map(p => p.cidade).filter(Boolean))) as string[];
 
   return (
     <>
@@ -128,96 +148,149 @@ export default function Home() {
         </div>
       </div>
 
-      <div className={styles.contentWrapper}>
-        {/* Espaço de Publicidade - Esquerda */}
-        <aside className={styles.sidebar}>
-          <div className={styles.adContainer}>
-            <p className={styles.adText}>
-              ANUNCIE AQUI SEU PRODUTO, LOJA OU SERVIÇO
-            </p>
-            <p className={styles.adContact}>
-              FALE CONOSCO (88) 9 81879814
-            </p>
+      <div className="container">
+        <div className={styles.header}>
+          <h2 className={styles.title}>todos os anúncios</h2>
+          <div className={styles.searchContainer}>
+            <input
+              type="text"
+              placeholder="buscar por nome..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && !buscando) {
+                  executarBusca();
+                }
+              }}
+              className={styles.searchInput}
+              disabled={buscando}
+            />
+            <button
+              className={styles.searchButton}
+              onClick={executarBusca}
+              disabled={buscando}
+              aria-label="pesquisar"
+            >
+              {buscando ? 'buscando...' : 'buscar'}
+            </button>
           </div>
-        </aside>
+        </div>
 
-        <div className="container">
-          <div className={styles.header}>
-            <h2 className={styles.title}>todos os anúncios</h2>
-            <div className={styles.searchContainer}>
-              <input
-                type="text"
-                placeholder="buscar por nome..."
-                value={busca}
-                onChange={(e) => setBusca(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && !buscando) {
-                    executarBusca();
-                  }
-                }}
-                className={styles.searchInput}
-                disabled={buscando}
-              />
+        {/* Filtros */}
+        <div className={styles.filterContainer}>
+          {/* Categorias */}
+          <div className={styles.filterSection}>
+            <span className={styles.filterLabel}>categorias</span>
+            <div className={styles.filterOptions}>
               <button
-                className={styles.searchButton}
-                onClick={executarBusca}
-                disabled={buscando}
-                aria-label="pesquisar"
+                onClick={() => setCategoriaSelecionada('')}
+                className={`${styles.filterButton} ${!categoriaSelecionada ? styles.filterButtonActive : ''}`}
               >
-                {buscando ? 'buscando...' : 'buscar'}
+                todas
+              </button>
+              {CATEGORIAS.map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => setCategoriaSelecionada(cat.value)}
+                  className={`${styles.filterButton} ${categoriaSelecionada === cat.value ? styles.filterButtonActive : ''}`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Preço */}
+          <div className={styles.filterSection}>
+            <span className={styles.filterLabel}>preço</span>
+            <div className={styles.priceInputs}>
+              <input
+                type="number"
+                placeholder="mínimo"
+                value={precoMin}
+                onChange={(e) => setPrecoMin(e.target.value)}
+                className={styles.priceInput}
+              />
+              <span className={styles.priceSeparator}>até</span>
+              <input
+                type="number"
+                placeholder="máximo"
+                value={precoMax}
+                onChange={(e) => setPrecoMax(e.target.value)}
+                className={styles.priceInput}
+              />
+            </div>
+          </div>
+
+          {/* Condição */}
+          <div className={styles.filterSection}>
+            <span className={styles.filterLabel}>condição</span>
+            <div className={styles.filterOptions}>
+              <button
+                onClick={() => setCondicaoSelecionada('')}
+                className={`${styles.filterButton} ${!condicaoSelecionada ? styles.filterButtonActive : ''}`}
+              >
+                todas
+              </button>
+              <button
+                onClick={() => setCondicaoSelecionada('novo')}
+                className={`${styles.filterButton} ${condicaoSelecionada === 'novo' ? styles.filterButtonActive : ''}`}
+              >
+                novo
+              </button>
+              <button
+                onClick={() => setCondicaoSelecionada('seminovo')}
+                className={`${styles.filterButton} ${condicaoSelecionada === 'seminovo' ? styles.filterButtonActive : ''}`}
+              >
+                seminovo
+              </button>
+              <button
+                onClick={() => setCondicaoSelecionada('usado')}
+                className={`${styles.filterButton} ${condicaoSelecionada === 'usado' ? styles.filterButtonActive : ''}`}
+              >
+                usado
               </button>
             </div>
           </div>
 
-          {/* Filtros de Categoria */}
-          <div className={styles.filterContainer}>
-            <button
-              onClick={() => setCategoriaSelecionada('')}
-              className={`${styles.filterButton} ${!categoriaSelecionada ? styles.filterButtonActive : ''}`}
-            >
-              todas
-            </button>
-            {CATEGORIAS.map((cat) => (
-              <button
-                key={cat.value}
-                onClick={() => setCategoriaSelecionada(cat.value)}
-                className={`${styles.filterButton} ${categoriaSelecionada === cat.value ? styles.filterButtonActive : ''}`}
-              >
-                {cat.label}
-              </button>
-            ))}
-          </div>
-
-          <div className={styles.productsSection}>
-            {loading || buscando ? (
-              <div className={styles.loading}>
-                <div className="loading"></div>
+          {/* Cidade */}
+          {cidades.length > 0 && (
+            <div className={styles.filterSection}>
+              <span className={styles.filterLabel}>cidade</span>
+              <div className={styles.selectWrapper}>
+                <select
+                  value={cidadeSelecionada}
+                  onChange={(e) => setCidadeSelecionada(e.target.value)}
+                  className={styles.styledSelect}
+                >
+                  <option value="">todas as cidades</option>
+                  {cidades.map((cidade) => (
+                    <option key={cidade} value={cidade}>
+                      {cidade}
+                    </option>
+                  ))}
+                </select>
+                <div className={styles.selectArrow}>▼</div>
               </div>
-            ) : produtosFiltrados.length === 0 ? (
-              <p className={styles.empty}>
-                {termoBusca ? 'nenhum anúncio encontrado para sua busca' : 'nenhum anúncio encontrado'}
-              </p>
-            ) : (
-              <div className="products-grid">
-                {produtosFiltrados.map((produto) => (
-                  <ProductCard key={produto.id} produto={produto} />
-                ))}
-              </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
-        {/* Espaço de Publicidade - Direita */}
-        <aside className={styles.sidebar}>
-          <div className={styles.adContainer}>
-            <p className={styles.adText}>
-              ANUNCIE AQUI SEU PRODUTO, LOJA OU SERVIÇO
-            </p>
-            <p className={styles.adContact}>
-              FALE CONOSCO (88) 9 81879814
-            </p>
+        {loading || buscando ? (
+          <div className={styles.loading}>
+            <div className="loading"></div>
           </div>
-        </aside>
+        ) : produtosFiltrados.length === 0 ? (
+          <p className={styles.empty}>
+            {termoBusca ? 'nenhum anúncio encontrado para sua busca' : 'nenhum anúncio encontrado'}
+          </p>
+        ) : (
+          <div className="products-grid">
+            {produtosFiltrados.map((produto) => (
+              <ProductCard key={produto.id} produto={produto} />
+            ))}
+          </div>
+        )}
       </div>
     </>
   );
