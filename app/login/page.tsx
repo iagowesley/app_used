@@ -41,7 +41,7 @@ export default function Login() {
       const hasResetToken = hash.length > 0 && hash.includes('access_token') && hash.includes('type=recovery');
 
       if (hasResetToken) {
-        // PASSO 1: Extrair o access_token do hash ANTES que o Supabase processe
+        // PASSO 1: Extrair o access_token do hash IMEDIATAMENTE antes do Supabase processar
         const hashParams = new URLSearchParams(hash.substring(1));
         const accessToken = hashParams.get('access_token');
         const refreshToken = hashParams.get('refresh_token');
@@ -49,14 +49,16 @@ export default function Login() {
 
         // Validar que é um token de recuperação
         if (accessToken && tokenType === 'recovery') {
-          // PASSO 2: Armazenar token no sessionStorage para uso posterior
+          // PASSO 2: Armazenar tokens no sessionStorage (backup) e marcar modo recuperação
           sessionStorage.setItem('recovery_access_token', accessToken);
+          sessionStorage.setItem('recovery_mode', 'true');
           if (refreshToken) {
             sessionStorage.setItem('recovery_refresh_token', refreshToken);
           }
 
-          // PASSO 3: Fazer signOut imediatamente para garantir que não há sessão ativa
-          await supabase.auth.signOut();
+          // PASSO 3: NÃO fazer signOut aqui! Precisamos da sessão ativa para updateUser
+          // O Supabase vai processar o hash automaticamente e logar o usuário
+          // Vamos apenas garantir que a UI mostre a tela de redefinição e não redirecione
 
           // PASSO 4: Limpar URL e mostrar tela de redefinição
           window.history.replaceState({}, '', '/login?reset=true');
@@ -90,16 +92,22 @@ export default function Login() {
 
       // Se NÃO for redefinição de senha, fazer logout se houver sessão ativa
       // Isso garante que a página de login sempre inicia sem sessão ativa
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        await supabase.auth.signOut();
+      const isRecoveryMode = sessionStorage.getItem('recovery_mode') === 'true';
+
+      if (!isRecoveryMode) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          // Se usuário já está logado e NÃO é recuperação, redirecionar para home ou fazer logout
+          // Como estamos na página de login, o ideal é redirecionar para home
+          router.push('/');
+        }
       }
 
       setCheckingAuth(false);
     };
 
     inicializarPaginaLogin();
-  }, []);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -193,9 +201,10 @@ export default function Login() {
     setEmail('');
     setErro('');
 
-    // Limpar tokens de recuperação do sessionStorage se existirem
+    // Limpar tokens e modo de recuperação
     sessionStorage.removeItem('recovery_access_token');
     sessionStorage.removeItem('recovery_refresh_token');
+    sessionStorage.removeItem('recovery_mode');
 
     router.push('/login');
   };
@@ -242,52 +251,40 @@ export default function Login() {
     setRedefinindo(true);
 
     try {
-      // PASSO 1: Recuperar token de recuperação do sessionStorage
-      const accessToken = sessionStorage.getItem('recovery_access_token');
-      const refreshToken = sessionStorage.getItem('recovery_refresh_token');
+      // Verificar se está em modo de recuperação
+      const isRecoveryMode = sessionStorage.getItem('recovery_mode') === 'true';
 
-      if (!accessToken) {
-        setErro('sessão de redefinição expirada. solicite um novo link.');
-        setRedefinindo(false);
-        return;
+      if (!isRecoveryMode) {
+        // Se não estiver em modo recuperação, verificar se tem sessão ativa
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          setErro('sessão de redefinição expirada. solicite um novo link.');
+          setRedefinindo(false);
+          return;
+        }
       }
 
-      // PASSO 2: Criar sessão temporária APENAS para atualizar a senha
-      // Isso é necessário porque updateUser requer uma sessão ativa
-      const { data: sessionData, error: sessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken || '',
-      });
-
-      if (sessionError || !sessionData.session) {
-        setErro('token de redefinição inválido ou expirado. solicite um novo link.');
-        sessionStorage.removeItem('recovery_access_token');
-        sessionStorage.removeItem('recovery_refresh_token');
-        setRedefinindo(false);
-        return;
-      }
-
-      // PASSO 3: Atualizar a senha
+      // O Supabase já criou uma sessão de recuperação automaticamente ao processar o hash fragment
+      // Podemos usar updateUser diretamente
       const { error: updateError } = await supabase.auth.updateUser({
         password: novaSenha,
       });
 
       if (updateError) throw updateError;
 
-      // PASSO 4: Fazer logout imediatamente após atualizar senha
+      // Fazer logout imediatamente após atualizar senha
       await supabase.auth.signOut();
 
-      // PASSO 5: Limpar tokens do sessionStorage
+      // Limpar tokens e modo de recuperação
       sessionStorage.removeItem('recovery_access_token');
       sessionStorage.removeItem('recovery_refresh_token');
+      sessionStorage.removeItem('recovery_mode');
 
-      // PASSO 6: Mostrar mensagem de sucesso
+      // Mostrar mensagem de sucesso
       setSenhaRedefinida(true);
     } catch (error: any) {
       setErro(error.message || 'erro ao redefinir senha');
-      // Limpar tokens em caso de erro também
-      sessionStorage.removeItem('recovery_access_token');
-      sessionStorage.removeItem('recovery_refresh_token');
+      // Não limpar tokens em caso de erro para permitir nova tentativa
     } finally {
       setRedefinindo(false);
     }
@@ -297,9 +294,10 @@ export default function Login() {
     // Garantir que o usuário está deslogado
     await supabase.auth.signOut();
 
-    // Limpar tokens de recuperação do sessionStorage
+    // Limpar tokens e modo de recuperação
     sessionStorage.removeItem('recovery_access_token');
     sessionStorage.removeItem('recovery_refresh_token');
+    sessionStorage.removeItem('recovery_mode');
 
     // Limpar estados e redirecionar
     setMostrarRedefinir(false);
