@@ -32,30 +32,52 @@ export default function Login() {
     }
 
     // CRÍTICO: Verificar PRIMEIRO de forma SÍNCRONA e IMEDIATA se há hash fragments
-    // Esta verificação deve acontecer ANTES de qualquer operação assíncrona
+    // O Supabase processa hash fragments automaticamente quando a página carrega,
+    // então precisamos detectar ANTES de qualquer processamento assíncrono
     const hash = window.location.hash;
     const urlParams = new URLSearchParams(window.location.search);
     const reset = urlParams.get('reset');
     
-    // Verificar se há hash fragments de reset (Supabase usa #access_token=...)
-    // Aceitar qualquer hash que contenha access_token (pode ser recovery ou outros tipos)
-    const hasResetToken = hash.length > 0 && hash.includes('access_token');
+    // Verificar se há hash fragments de reset (Supabase usa #access_token=...&type=recovery)
+    // Aceitar qualquer hash que contenha access_token (indica link de reset/recuperação)
+    const hasResetToken = hash.length > 0 && (hash.includes('access_token') || hash.includes('recovery'));
     
     // Se houver token de reset OU parâmetro reset=true, mostrar tela IMEDIATAMENTE
+    // IMPORTANTE: Isso deve acontecer ANTES de qualquer chamada ao Supabase
     if (hasResetToken || reset === 'true') {
-      // Limpar URL para remover tokens visíveis
+      // Limpar URL para remover hash fragments visíveis ANTES de qualquer processamento
       if (hasResetToken) {
         window.history.replaceState({}, '', '/login?reset=true');
       }
       
       // Mostrar tela de redefinição IMEDIATAMENTE (síncrono, antes de qualquer processamento)
+      // Isso previne que qualquer lógica de redirecionamento execute
       setMostrarRedefinir(true);
       setCheckingAuth(false);
       
+      // IMPORTANTE: Adicionar listener para prevenir redirecionamento automático
+      // mesmo que o Supabase crie uma sessão via onAuthStateChange
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+        // Se estamos na tela de redefinição, NÃO redirecionar mesmo se houver sessão
+        // Verificar URL atual diretamente (valores mais confiáveis)
+        const currentHash = window.location.hash;
+        const currentParams = new URLSearchParams(window.location.search);
+        const currentReset = currentParams.get('reset');
+        const currentPath = window.location.pathname;
+        
+        // Se estiver na página de login com reset, não fazer nada
+        const isResetPage = currentPath === '/login' && (currentHash.includes('access_token') || currentHash.includes('recovery') || currentReset === 'true');
+        
+        if (isResetPage) {
+          // NÃO redirecionar - manter na tela de redefinição
+          return;
+        }
+      });
+
       // Processar hash fragments em background (sem bloquear a UI)
+      // O Supabase já processou automaticamente, mas a tela já está mostrando redefinição
       if (hasResetToken) {
-        // Aguardar para que o Supabase processe os hash fragments
-        // A tela já está mostrando redefinição, então não há redirecionamento
+        // Aguardar um pouco para que o Supabase termine de processar os hash fragments
         setTimeout(async () => {
           try {
             const { data: { session }, error } = await supabase.auth.getSession();
@@ -63,18 +85,23 @@ export default function Login() {
               setErro('link de redefinição inválido ou expirado. solicite um novo link.');
               setMostrarRedefinir(false);
             }
+            // Se há sessão, está tudo certo - o usuário pode redefinir a senha
+            // Mas NÃO fazemos logout nem redirecionamento - apenas mantemos na tela de reset
           } catch (error) {
             setErro('erro ao processar link de redefinição. solicite um novo link.');
             setMostrarRedefinir(false);
           }
-        }, 1500);
+        }, 1000);
       }
       
-      // RETORNAR IMEDIATAMENTE - não verificar login se for reset
-      return;
+      // Cleanup do listener quando o componente desmontar ou quando sair do reset
+      return () => {
+        subscription.unsubscribe();
+      };
     }
 
     // APENAS se NÃO for redefinição de senha, verificar se o usuário já está logado
+    // Esta verificação só acontece se NÃO houver hash fragments de reset
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) {
         router.push('/');
