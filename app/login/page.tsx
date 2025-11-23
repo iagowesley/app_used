@@ -26,25 +26,63 @@ export default function Login() {
   const router = useRouter();
 
   useEffect(() => {
-    // Verificar se há parâmetro de reset na URL usando window.location
-    if (typeof window !== 'undefined') {
-      const urlParams = new URLSearchParams(window.location.search);
-      const reset = urlParams.get('reset');
-      if (reset === 'true') {
-        setMostrarRedefinir(true);
+    const verificarResetSenha = async () => {
+      if (typeof window === 'undefined') {
         setCheckingAuth(false);
         return;
       }
-    }
 
-    // Verificar se o usuário já está logado
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        router.push('/');
-      } else {
+      // Verificar se há parâmetro de reset na URL (query params)
+      const urlParams = new URLSearchParams(window.location.search);
+      const reset = urlParams.get('reset');
+      
+      // Verificar se há hash fragments de reset de senha (Supabase usa #access_token=...)
+      const hash = window.location.hash;
+      const hasResetToken = hash.includes('access_token') || hash.includes('type=recovery');
+
+      // Se houver token de reset OU parâmetro reset=true, processar redefinição
+      if (reset === 'true' || hasResetToken) {
+        // IMPORTANTE: Processar hash fragments PRIMEIRO para criar sessão de recovery temporária
+        // O Supabase precisa dessa sessão temporária para validar o token de recovery
+        // quando o usuário chamar updateUser({ password })
+        if (hasResetToken) {
+          // Aguardar um pouco para que o Supabase processe os hash fragments
+          // O Supabase processa automaticamente os hash fragments no cliente
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Verificar se há uma sessão de recovery (temporária)
+          const { data: { session } } = await supabase.auth.getSession();
+          
+          // Se não houver sessão de recovery válida, mostrar erro
+          if (!session) {
+            setErro('link de redefinição inválido ou expirado. solicite um novo link.');
+            setCheckingAuth(false);
+            return;
+          }
+          
+          // Limpar URL para remover tokens visíveis
+          window.history.replaceState({}, '', '/login?reset=true');
+        }
+        
+        // Mostrar tela de redefinição (NÃO fazer logout aqui, pois precisamos da sessão de recovery)
+        // O logout será feito após a senha ser redefinida com sucesso
+        setMostrarRedefinir(true);
         setCheckingAuth(false);
+        
+        return;
       }
-    });
+
+      // Se não for redefinição de senha, verificar se o usuário já está logado
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user) {
+          router.push('/');
+        } else {
+          setCheckingAuth(false);
+        }
+      });
+    };
+
+    verificarResetSenha();
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
