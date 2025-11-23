@@ -104,14 +104,16 @@ export default function Login() {
         subscription.unsubscribe();
       };
     } else {
-      // APENAS se NÃO for redefinição de senha, verificar se o usuário já está logado
-      // Esta verificação só acontece se NÃO houver hash fragments de reset
-      supabase.auth.getUser().then(({ data: { user } }) => {
+      // Se NÃO for redefinição de senha, fazer logout se houver sessão ativa
+      // Isso garante que se o usuário atualizar a página de /login?reset=true para /login,
+      // ele será deslogado e verá a tela de login normal
+      supabase.auth.getUser().then(async ({ data: { user } }) => {
         if (user) {
-          router.push('/');
-        } else {
-          setCheckingAuth(false);
+          // Fazer logout para garantir que não há sessão ativa
+          // Isso é importante caso o usuário tenha vindo da tela de redefinição
+          await supabase.auth.signOut();
         }
+        setCheckingAuth(false);
       });
     }
   }, [router]);

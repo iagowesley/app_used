@@ -19,6 +19,23 @@ export default function Home() {
   const [precoMax, setPrecoMax] = useState('');
   const [condicaoSelecionada, setCondicaoSelecionada] = useState('');
 
+  // Detectar hash fragments de recuperação de senha e redirecionar
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const hash = window.location.hash;
+    // Verificar se há hash fragments de reset (Supabase usa #access_token=...&type=recovery)
+    const hasResetToken = hash.length > 0 && (hash.includes('access_token') || hash.includes('recovery') || hash.includes('type=recovery'));
+    
+    if (hasResetToken) {
+      // Redirecionar imediatamente para a página de login com reset=true
+      // Preservar o hash fragment na URL para que o Supabase possa processá-lo
+      // Usar window.location.href para preservar o hash fragment
+      window.location.href = `/login?reset=true${hash}`;
+      return;
+    }
+  }, []);
+
   useEffect(() => {
     carregarProdutos();
   }, []);
