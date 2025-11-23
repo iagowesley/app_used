@@ -70,6 +70,7 @@ export default function Login() {
         
         if (isResetPage) {
           // NÃO redirecionar - manter na tela de redefinição
+          // A sessão de recuperação é necessária para redefinir senha, mas não deve fazer login permanente
           return;
         }
       });
@@ -80,13 +81,17 @@ export default function Login() {
         // Aguardar um pouco para que o Supabase termine de processar os hash fragments
         setTimeout(async () => {
           try {
+            // Verificar se o token de recuperação é válido
+            // O Supabase processa o hash fragment automaticamente e cria uma sessão de recuperação
+            // Essa sessão permite apenas redefinir senha, não login permanente
             const { data: { session }, error } = await supabase.auth.getSession();
             if (error || !session) {
               setErro('link de redefinição inválido ou expirado. solicite um novo link.');
               setMostrarRedefinir(false);
             }
-            // Se há sessão, está tudo certo - o usuário pode redefinir a senha
-            // Mas NÃO fazemos logout nem redirecionamento - apenas mantemos na tela de reset
+            // Se há sessão de recuperação, está tudo certo - o usuário pode redefinir a senha
+            // Não fazemos logout aqui porque a sessão de recuperação é necessária para updateUser
+            // O logout será feito após redefinir a senha com sucesso
           } catch (error) {
             setErro('erro ao processar link de redefinição. solicite um novo link.');
             setMostrarRedefinir(false);
@@ -98,17 +103,17 @@ export default function Login() {
       return () => {
         subscription.unsubscribe();
       };
+    } else {
+      // APENAS se NÃO for redefinição de senha, verificar se o usuário já está logado
+      // Esta verificação só acontece se NÃO houver hash fragments de reset
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user) {
+          router.push('/');
+        } else {
+          setCheckingAuth(false);
+        }
+      });
     }
-
-    // APENAS se NÃO for redefinição de senha, verificar se o usuário já está logado
-    // Esta verificação só acontece se NÃO houver hash fragments de reset
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user) {
-        router.push('/');
-      } else {
-        setCheckingAuth(false);
-      }
-    });
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
