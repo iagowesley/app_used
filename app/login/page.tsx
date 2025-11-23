@@ -33,53 +33,19 @@ export default function Login() {
       if (reset === 'true') {
         setMostrarRedefinir(true);
         setCheckingAuth(false);
-        // Não retornar aqui para permitir que o listener de auth funcione
+        return;
       }
     }
 
-    // Configurar listener para mudanças de estado de autenticação
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      console.log('Auth event:', event);
-
-      if (event === 'PASSWORD_RECOVERY') {
-        setMostrarRedefinir(true);
-        setCheckingAuth(false);
-      } else if (event === 'SIGNED_IN') {
-        // Se estivermos na tela de redefinição, não redirecionar
-        const urlParams = new URLSearchParams(window.location.search);
-        const reset = urlParams.get('reset');
-
-        if (!reset && !mostrarRedefinir) {
-          router.push('/');
-        } else {
-          setCheckingAuth(false);
-        }
-      } else if (event === 'SIGNED_OUT') {
-        setCheckingAuth(false);
-      }
-    });
-
-    // Verificar estado inicial
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        // Se já tem sessão, verificar se é fluxo de reset
-        const urlParams = new URLSearchParams(window.location.search);
-        const reset = urlParams.get('reset');
-
-        if (!reset) {
-          router.push('/');
-        } else {
-          setCheckingAuth(false);
-        }
+    // Verificar se o usuário já está logado
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        router.push('/');
       } else {
         setCheckingAuth(false);
       }
     });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [router, mostrarRedefinir]);
+  }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -151,7 +117,7 @@ export default function Login() {
       }
 
       // Construir URL de redirecionamento (garantir que não tenha barras duplas)
-      const redirectTo = `${baseUrl}/auth/callback?next=/login?reset=true`.replace(/\/+/g, '/').replace(':/', '://');
+      const redirectTo = `${baseUrl}/login?reset=true`.replace(/\/+/g, '/');
 
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo,
