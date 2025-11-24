@@ -1,11 +1,11 @@
 ﻿// Layout principal da aplicação
 'use client';
 
-import { useEffect, useState } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useState, Suspense } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ReportBugButton from '@/components/ReportBugButton';
+import LayoutController from '@/components/LayoutController';
 import '@/styles/globals.css';
 
 export default function RootLayout({
@@ -13,24 +13,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [mostrarHeaderFooter, setMostrarHeaderFooter] = useState(true);
-
-  useEffect(() => {
-    // Verificar se está na página de login com reset (tela de redefinição)
-    if (pathname === '/login') {
-      const reset = searchParams?.get('reset');
-      const hash = typeof window !== 'undefined' ? window.location.hash : '';
-      const isResetPage = reset === 'true' || (hash.length > 0 && (hash.includes('access_token') || hash.includes('recovery')));
-      
-      // Esconder Header e Footer quando estiver na tela de redefinição
-      setMostrarHeaderFooter(!isResetPage);
-    } else {
-      // Sempre mostrar Header e Footer em outras páginas
-      setMostrarHeaderFooter(true);
-    }
-  }, [pathname, searchParams]);
 
   return (
     <html lang="pt-BR" suppressHydrationWarning>
@@ -44,6 +27,9 @@ export default function RootLayout({
         <meta name="description" content="compre e venda itens usados de forma simples" />
       </head>
       <body suppressHydrationWarning>
+        <Suspense fallback={null}>
+          <LayoutController onShowHeaderFooter={setMostrarHeaderFooter} />
+        </Suspense>
         {mostrarHeaderFooter && <Header />}
         <main style={{ minHeight: mostrarHeaderFooter ? '80vh' : '100vh' }}>
           {children}
