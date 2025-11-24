@@ -577,3 +577,42 @@
   margin-top: 80px;
   text-transform: lowercase;
 }
+
+/* Layout Principal com Sidebars */
+.mainLayout {
+  display: grid;
+  grid-template-columns: 1fr minmax(auto, 1200px) 1fr;
+  gap: 24px;
+  width: 100%;
+  position: relative;
+}
+
+.sidebarLeft,
+.sidebarRight {
+  display: block;
+  height: 100%;
+}
+
+.centerContent {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Responsividade para Sidebars */
+@media (max-width: 1600px) {
+  .mainLayout {
+    grid-template-columns: 1fr;
+    display: block;
+  }
+
+  .sidebarLeft,
+  .sidebarRight {
+    display: none;
+  }
+
+  .centerContent {
+    max-width: 100%;
+  }
+}

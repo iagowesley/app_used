@@ -452,10 +452,10 @@ export default function Login() {
         <div className={styles.standaloneFormCard}>
           <h1 className={styles.title}>email enviado!</h1>
           <p className={styles.subtitle}>
-            enviamos um link de recuperação para <strong>{email}</strong>
+            enviamos um link de acesso direto para <strong>{email}</strong>
           </p>
           <p className={styles.instructionText}>
-            verifique sua caixa de entrada e clique no link para redefinir sua senha.
+            verifique sua caixa de entrada e clique no link para entrar na sua conta.
             se não encontrar, verifique também a pasta de spam.
           </p>
           <button
@@ -475,9 +475,9 @@ export default function Login() {
     return (
       <div className={styles.container}>
         <div className={styles.standaloneFormCard}>
-          <h1 className={styles.title}>recuperar senha</h1>
+          <h1 className={styles.title}>recuperar acesso</h1>
           <p className={styles.subtitle}>
-            digite seu email e enviaremos um link para redefinir sua senha
+            enviaremos um email com a opção de acesso direto a sua conta
           </p>
 
           <form onSubmit={handleRecuperarSenha} className={styles.form}>
@@ -514,7 +514,7 @@ export default function Login() {
               style={{ width: '100%', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
             >
               {enviandoEmail && <div className="loading-small"></div>}
-              {enviandoEmail ? 'enviando...' : 'enviar link de recuperação'}
+              {enviandoEmail ? 'enviando...' : 'enviar link de acesso'}
             </button>
           </form>
 
@@ -603,7 +603,7 @@ export default function Login() {
               onClick={() => setMostrarRecuperacao(true)}
               className={styles.esqueciSenhaLink}
             >
-              esqueci minha senha
+              recuperar acesso
             </button>
 
             {erro && <div className="error-message">{erro}</div>}

@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { supabase, Produto } from '@/lib/supabase';
 import ProductCard from '@/components/ProductCard';
 import { CATEGORIAS } from '@/lib/categorias';
+import AdSidebar from '@/components/AdSidebar';
 import styles from './page.module.css';
 
 export default function Home() {
@@ -26,7 +27,7 @@ export default function Home() {
     const hash = window.location.hash;
     // Verificar se há hash fragments de reset (Supabase usa #access_token=...&type=recovery)
     const hasResetToken = hash.length > 0 && (hash.includes('access_token') || hash.includes('recovery') || hash.includes('type=recovery'));
-    
+
     if (hasResetToken) {
       // Redirecionar imediatamente para a página de login com reset=true
       // Preservar o hash fragment na URL para que o Supabase possa processá-lo
@@ -165,149 +166,159 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container">
-        <div className={styles.header}>
-          <h2 className={styles.title}>todos os anúncios</h2>
-          <div className={styles.searchContainer}>
-            <input
-              type="text"
-              placeholder="buscar por nome..."
-              value={busca}
-              onChange={(e) => setBusca(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' && !buscando) {
-                  executarBusca();
-                }
-              }}
-              className={styles.searchInput}
-              disabled={buscando}
-            />
-            <button
-              className={styles.searchButton}
-              onClick={executarBusca}
-              disabled={buscando}
-              aria-label="pesquisar"
-            >
-              {buscando ? 'buscando...' : 'buscar'}
-            </button>
-          </div>
+      <div className={styles.mainLayout}>
+        <div className={styles.sidebarLeft}>
+          <AdSidebar side="left" />
         </div>
 
-        {/* Filtros */}
-        <div className={styles.filterContainer}>
-          {/* Categorias */}
-          <div className={styles.filterSection}>
-            <span className={styles.filterLabel}>categorias</span>
-            <div className={styles.filterOptions}>
-              <button
-                onClick={() => setCategoriaSelecionada('')}
-                className={`${styles.filterButton} ${!categoriaSelecionada ? styles.filterButtonActive : ''}`}
-              >
-                todas
-              </button>
-              {CATEGORIAS.map((cat) => (
-                <button
-                  key={cat.value}
-                  onClick={() => setCategoriaSelecionada(cat.value)}
-                  className={`${styles.filterButton} ${categoriaSelecionada === cat.value ? styles.filterButtonActive : ''}`}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Preço */}
-          <div className={styles.filterSection}>
-            <span className={styles.filterLabel}>preço</span>
-            <div className={styles.priceInputs}>
+        <div className={styles.centerContent}>
+          <div className={styles.header}>
+            <h2 className={styles.title}>todos os anúncios</h2>
+            <div className={styles.searchContainer}>
               <input
-                type="number"
-                placeholder="mínimo"
-                value={precoMin}
-                onChange={(e) => setPrecoMin(e.target.value)}
-                className={styles.priceInput}
+                type="text"
+                placeholder="buscar por nome..."
+                value={busca}
+                onChange={(e) => setBusca(e.target.value)}
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !buscando) {
+                    executarBusca();
+                  }
+                }}
+                className={styles.searchInput}
+                disabled={buscando}
               />
-              <span className={styles.priceSeparator}>até</span>
-              <input
-                type="number"
-                placeholder="máximo"
-                value={precoMax}
-                onChange={(e) => setPrecoMax(e.target.value)}
-                className={styles.priceInput}
-              />
-            </div>
-          </div>
-
-          {/* Condição */}
-          <div className={styles.filterSection}>
-            <span className={styles.filterLabel}>condição</span>
-            <div className={styles.filterOptions}>
               <button
-                onClick={() => setCondicaoSelecionada('')}
-                className={`${styles.filterButton} ${!condicaoSelecionada ? styles.filterButtonActive : ''}`}
+                className={styles.searchButton}
+                onClick={executarBusca}
+                disabled={buscando}
+                aria-label="pesquisar"
               >
-                todas
-              </button>
-              <button
-                onClick={() => setCondicaoSelecionada('novo')}
-                className={`${styles.filterButton} ${condicaoSelecionada === 'novo' ? styles.filterButtonActive : ''}`}
-              >
-                novo
-              </button>
-              <button
-                onClick={() => setCondicaoSelecionada('seminovo')}
-                className={`${styles.filterButton} ${condicaoSelecionada === 'seminovo' ? styles.filterButtonActive : ''}`}
-              >
-                seminovo
-              </button>
-              <button
-                onClick={() => setCondicaoSelecionada('usado')}
-                className={`${styles.filterButton} ${condicaoSelecionada === 'usado' ? styles.filterButtonActive : ''}`}
-              >
-                usado
+                {buscando ? 'buscando...' : 'buscar'}
               </button>
             </div>
           </div>
 
-          {/* Cidade */}
-          {cidades.length > 0 && (
+          {/* Filtros */}
+          <div className={styles.filterContainer}>
+            {/* Categorias */}
             <div className={styles.filterSection}>
-              <span className={styles.filterLabel}>cidade</span>
-              <div className={styles.selectWrapper}>
-                <select
-                  value={cidadeSelecionada}
-                  onChange={(e) => setCidadeSelecionada(e.target.value)}
-                  className={styles.styledSelect}
+              <span className={styles.filterLabel}>categorias</span>
+              <div className={styles.filterOptions}>
+                <button
+                  onClick={() => setCategoriaSelecionada('')}
+                  className={`${styles.filterButton} ${!categoriaSelecionada ? styles.filterButtonActive : ''}`}
                 >
-                  <option value="">todas as cidades</option>
-                  {cidades.map((cidade) => (
-                    <option key={cidade} value={cidade}>
-                      {cidade}
-                    </option>
-                  ))}
-                </select>
-                <div className={styles.selectArrow}>▼</div>
+                  todas
+                </button>
+                {CATEGORIAS.map((cat) => (
+                  <button
+                    key={cat.value}
+                    onClick={() => setCategoriaSelecionada(cat.value)}
+                    className={`${styles.filterButton} ${categoriaSelecionada === cat.value ? styles.filterButtonActive : ''}`}
+                  >
+                    {cat.label}
+                  </button>
+                ))}
               </div>
+            </div>
+
+            {/* Preço */}
+            <div className={styles.filterSection}>
+              <span className={styles.filterLabel}>preço</span>
+              <div className={styles.priceInputs}>
+                <input
+                  type="number"
+                  placeholder="mínimo"
+                  value={precoMin}
+                  onChange={(e) => setPrecoMin(e.target.value)}
+                  className={styles.priceInput}
+                />
+                <span className={styles.priceSeparator}>até</span>
+                <input
+                  type="number"
+                  placeholder="máximo"
+                  value={precoMax}
+                  onChange={(e) => setPrecoMax(e.target.value)}
+                  className={styles.priceInput}
+                />
+              </div>
+            </div>
+
+            {/* Condição */}
+            <div className={styles.filterSection}>
+              <span className={styles.filterLabel}>condição</span>
+              <div className={styles.filterOptions}>
+                <button
+                  onClick={() => setCondicaoSelecionada('')}
+                  className={`${styles.filterButton} ${!condicaoSelecionada ? styles.filterButtonActive : ''}`}
+                >
+                  todas
+                </button>
+                <button
+                  onClick={() => setCondicaoSelecionada('novo')}
+                  className={`${styles.filterButton} ${condicaoSelecionada === 'novo' ? styles.filterButtonActive : ''}`}
+                >
+                  novo
+                </button>
+                <button
+                  onClick={() => setCondicaoSelecionada('seminovo')}
+                  className={`${styles.filterButton} ${condicaoSelecionada === 'seminovo' ? styles.filterButtonActive : ''}`}
+                >
+                  seminovo
+                </button>
+                <button
+                  onClick={() => setCondicaoSelecionada('usado')}
+                  className={`${styles.filterButton} ${condicaoSelecionada === 'usado' ? styles.filterButtonActive : ''}`}
+                >
+                  usado
+                </button>
+              </div>
+            </div>
+
+            {/* Cidade */}
+            {cidades.length > 0 && (
+              <div className={styles.filterSection}>
+                <span className={styles.filterLabel}>cidade</span>
+                <div className={styles.selectWrapper}>
+                  <select
+                    value={cidadeSelecionada}
+                    onChange={(e) => setCidadeSelecionada(e.target.value)}
+                    className={styles.styledSelect}
+                  >
+                    <option value="">todas as cidades</option>
+                    {cidades.map((cidade) => (
+                      <option key={cidade} value={cidade}>
+                        {cidade}
+                      </option>
+                    ))}
+                  </select>
+                  <div className={styles.selectArrow}>▼</div>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {loading || buscando ? (
+            <div className={styles.loading}>
+              <div className="loading"></div>
+            </div>
+          ) : produtosFiltrados.length === 0 ? (
+            <p className={styles.empty}>
+              {termoBusca ? 'nenhum anúncio encontrado para sua busca' : 'nenhum anúncio encontrado'}
+            </p>
+          ) : (
+            <div className="products-grid">
+              {produtosFiltrados.map((produto) => (
+                <ProductCard key={produto.id} produto={produto} />
+              ))}
             </div>
           )}
         </div>
 
-        {loading || buscando ? (
-          <div className={styles.loading}>
-            <div className="loading"></div>
-          </div>
-        ) : produtosFiltrados.length === 0 ? (
-          <p className={styles.empty}>
-            {termoBusca ? 'nenhum anúncio encontrado para sua busca' : 'nenhum anúncio encontrado'}
-          </p>
-        ) : (
-          <div className="products-grid">
-            {produtosFiltrados.map((produto) => (
-              <ProductCard key={produto.id} produto={produto} />
-            ))}
-          </div>
-        )}
+        <div className={styles.sidebarRight}>
+          <AdSidebar side="right" />
+        </div>
       </div>
     </>
   );
