@@ -42,14 +42,14 @@ export default function AdminDashboard() {
   const verificarAdmin = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      
+
       if (!user) {
         router.push('/login');
         return;
       }
-      
+
       setUser(user);
-      
+
       // Verificar se é admin
       const response = await fetch('/api/admin/verificar', {
         method: 'POST',
@@ -58,15 +58,15 @@ export default function AdminDashboard() {
         },
         body: JSON.stringify({ email: user.email }),
       });
-      
+
       const data = await response.json();
-      
+
       if (!data.isAdmin) {
         alert('acesso negado. apenas administradores podem acessar esta página.');
         router.push('/');
         return;
       }
-      
+
       setIsAdmin(true);
     } catch (error) {
       console.error('erro ao verificar admin:', error);
@@ -78,14 +78,14 @@ export default function AdminDashboard() {
 
   const carregarDados = async () => {
     if (!user?.email) return;
-    
+
     try {
       const response = await fetch(`/api/admin/dashboard?email=${encodeURIComponent(user.email)}`);
-      
+
       if (!response.ok) {
         throw new Error('erro ao carregar dados');
       }
-      
+
       const data = await response.json();
       setEstatisticas(data.estatisticas);
       setProdutos(data.produtos || []);
@@ -106,7 +106,7 @@ export default function AdminDashboard() {
     // Filtro de status
     if (filtro === 'disponiveis' && p.vendido) return false;
     if (filtro === 'vendidos' && !p.vendido) return false;
-    
+
     // Filtro de busca
     if (busca) {
       const buscaLower = busca.toLowerCase();
@@ -116,7 +116,7 @@ export default function AdminDashboard() {
         p.categoria?.toLowerCase().includes(buscaLower)
       );
     }
-    
+
     return true;
   });
 
@@ -138,8 +138,8 @@ export default function AdminDashboard() {
     <div className="container">
       <div className={styles.dashboard}>
         <div className={styles.header}>
-          <h1 className={styles.title}>dashboard admin</h1>
-          <button 
+          <h1 className={styles.title}>dashboard</h1>
+          <button
             onClick={() => router.push('/')}
             className={styles.backButton}
           >

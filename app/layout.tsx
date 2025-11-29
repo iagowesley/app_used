@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ReportBugButton from '@/components/ReportBugButton';
 import LayoutController from '@/components/LayoutController';
+import SessionMonitor from '@/components/SessionMonitor';
 import '@/styles/globals.css';
 
 export default function RootLayout({
@@ -30,6 +31,7 @@ export default function RootLayout({
         <Suspense fallback={null}>
           <LayoutController onShowHeaderFooter={setMostrarHeaderFooter} />
         </Suspense>
+        <SessionMonitor />
         {mostrarHeaderFooter && <Header />}
         <main style={{ minHeight: mostrarHeaderFooter ? '80vh' : '100vh' }}>
           {children}

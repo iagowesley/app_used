@@ -15,7 +15,7 @@
   font-size: 32px;
   font-weight: 700;
   color: var(--color-text);
-  text-transform: lowercase;
+  
   margin: 0;
 }
 
@@ -29,7 +29,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: lowercase;
+  
 }
 
 .backButton:hover {
@@ -56,7 +56,7 @@
   font-size: 14px;
   color: var(--color-text-light);
   margin: 0 0 12px 0;
-  text-transform: lowercase;
+  
   font-weight: 600;
 }
 
@@ -90,7 +90,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  text-transform: lowercase;
+  
 }
 
 .filterButton:hover {
@@ -110,7 +110,7 @@
   border: 2px solid #e0e0e0;
   border-radius: var(--border-radius);
   font-size: 14px;
-  text-transform: lowercase;
+  
 }
 
 .searchInput:focus {
@@ -141,7 +141,7 @@
   font-size: 14px;
   font-weight: 600;
   color: var(--color-text);
-  text-transform: lowercase;
+  
   border-bottom: 2px solid #e0e0e0;
 }
 
@@ -150,7 +150,7 @@
   font-size: 14px;
   color: var(--color-text);
   border-bottom: 1px solid #f0f0f0;
-  text-transform: lowercase;
+  
 }
 
 .table tbody tr:hover {
@@ -171,7 +171,7 @@
   border-radius: 12px;
   font-size: 12px;
   font-weight: 600;
-  text-transform: lowercase;
+  
 }
 
 .statusBadge.disponivel {
@@ -194,7 +194,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: opacity 0.3s ease;
-  text-transform: lowercase;
+  
 }
 
 .actionButton:hover {
@@ -205,7 +205,7 @@
   text-align: center;
   padding: 40px;
   color: var(--color-text-light);
-  text-transform: lowercase;
+  
 }
 
 .loadingContainer {
@@ -270,7 +270,7 @@
   font-size: 24px;
   font-weight: 700;
   color: var(--color-text);
-  text-transform: lowercase;
+  
   margin: 0 0 24px 0;
 }
 
@@ -317,7 +317,7 @@
 .cidadeLabel {
   font-size: 14px;
   color: var(--color-text-light);
-  text-transform: lowercase;
+  
   font-weight: 500;
 }
 

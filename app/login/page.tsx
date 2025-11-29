@@ -123,6 +123,23 @@ export default function Login() {
       if (error) throw error;
 
       if (data.user) {
+        // Gerar ID de sessão único
+        const sessionId = crypto.randomUUID();
+
+        // Salvar localmente
+        localStorage.setItem('local_session_id', sessionId);
+
+        // Definir período de graça de 15 segundos para evitar verificações prematuras
+        localStorage.setItem('session_grace_until', String(Date.now() + 15000));
+
+        // Atualizar no servidor (user_metadata)
+        await supabase.auth.updateUser({
+          data: { active_session_id: sessionId }
+        });
+
+        // Pequeno delay para garantir propagação
+        await new Promise(resolve => setTimeout(resolve, 500));
+
         router.push('/');
       }
     } catch (error: any) {

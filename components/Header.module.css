@@ -51,7 +51,7 @@
 }
 
 .btnAdmin {
-  background-color: #6c757d;
+  background-color: #9ca3af;
   color: white;
   padding: 14px 28px;
   border-radius: var(--border-radius);
@@ -93,7 +93,8 @@
   cursor: pointer;
 }
 
-.btnLogin, .btnCadastro {
+.btnLogin,
+.btnCadastro {
   padding: 14px 28px;
   border-radius: var(--border-radius);
   text-decoration: none;
@@ -155,7 +156,8 @@
     gap: 8px;
   }
 
-  .btnLogin, .btnCadastro {
+  .btnLogin,
+  .btnCadastro {
     padding: 10px 16px;
     font-size: 14px;
   }
