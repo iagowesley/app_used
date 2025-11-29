@@ -18,66 +18,20 @@ export default function Cadastro() {
   const [mostrarPopup, setMostrarPopup] = useState(false);
   const [mostrarErro, setMostrarErro] = useState(false);
   const [mensagemErro, setMensagemErro] = useState('');
-  const [loadingGoogle, setLoadingGoogle] = useState(false);
-  const [mostrarPopupEmailExistente, setMostrarPopupEmailExistente] = useState(false);
+
+
   const router = useRouter();
 
   useEffect(() => {
-    // Verificar se o usuário retornou do OAuth do Google
-    const verificarRetornoOAuth = async () => {
+    // Verificar se usuário já está logado
+    const verificarAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      
-      if (session && window.location.pathname === '/cadastro') {
-        // Verificar se a conta foi criada recentemente (últimos 5 segundos)
-        const userCreatedAt = new Date(session.user.created_at).getTime();
-        const agora = Date.now();
-        const diffSegundos = (agora - userCreatedAt) / 1000;
-        
-        // Se a conta foi criada há mais de 5 segundos, significa que já existia
-        if (diffSegundos > 5) {
-          // Email já cadastrado - mostrar popup
-          setMostrarPopupEmailExistente(true);
-          setLoadingGoogle(false);
-          
-          // Redirecionar após 3 segundos automaticamente
-          setTimeout(() => {
-            router.push('/');
-          }, 3000);
-        } else {
-          // Usuário novo - redirecionar normalmente
-          router.push('/');
-        }
+      if (session) {
+        router.push('/');
       }
     };
 
-    verificarRetornoOAuth();
-
-    // Listener para detectar quando usuário faz login com Google
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (event === 'SIGNED_IN' && session && window.location.pathname === '/cadastro') {
-        // Verificar se a conta foi criada recentemente (últimos 5 segundos)
-        const userCreatedAt = new Date(session.user.created_at).getTime();
-        const agora = Date.now();
-        const diffSegundos = (agora - userCreatedAt) / 1000;
-        
-        // Se a conta foi criada há mais de 5 segundos, significa que já existia
-        if (diffSegundos > 5) {
-          // Email já cadastrado - mostrar popup
-          setMostrarPopupEmailExistente(true);
-          setLoadingGoogle(false);
-          
-          // Redirecionar após 3 segundos automaticamente
-          setTimeout(() => {
-            router.push('/');
-          }, 3000);
-        } else {
-          // Usuário novo - redirecionar normalmente
-          router.push('/');
-        }
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    verificarAuth();
   }, [router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -146,40 +100,7 @@ export default function Cadastro() {
     router.push('/login');
   };
 
-  const handleGoogleSignUp = async () => {
-    setMensagemErro('');
-    setMostrarErro(false);
-    setLoadingGoogle(true);
 
-    try {
-      const baseUrl = getSiteUrl();
-      
-      // Validar que temos uma URL válida
-      if (!baseUrl || baseUrl.trim() === '') {
-        throw new Error('URL do site não configurada. Configure NEXT_PUBLIC_SITE_URL no Netlify.');
-      }
-      
-      // Construir URL de redirecionamento (garantir que não tenha barras duplas)
-      const redirectTo = `${baseUrl}/cadastro`.replace(/\/+/g, '/');
-      
-      const { error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
-        },
-      });
-
-      if (error) throw error;
-    } catch (error: any) {
-      setMensagemErro(error.message || 'erro ao cadastrar com google');
-      setMostrarErro(true);
-      setLoadingGoogle(false);
-    }
-  };
 
   return (
     <div className={styles.cadastroContainer}>
@@ -191,7 +112,7 @@ export default function Cadastro() {
             cadastre-se e acesse a plataforma
           </p>
           <p className={styles.brandingDescription}>
-            crie sua conta gratuita e comece a comprar e vender produtos usados. 
+            crie sua conta gratuita e comece a comprar e vender produtos usados.
             rápido, simples e seguro. junte-se à nossa comunidade.
           </p>
         </div>
@@ -202,91 +123,91 @@ export default function Cadastro() {
         <div className={styles.formCard}>
           <h1 className={styles.title}>cadastrar</h1>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          <div className="form-group">
-            <label htmlFor="email">email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                e.target.setCustomValidity('');
-              }}
-              onInvalid={(e) => {
-                const target = e.target as HTMLInputElement;
-                if (target.validity.valueMissing) {
-                  target.setCustomValidity('preencha o email');
-                } else if (target.validity.typeMismatch) {
-                  target.setCustomValidity('digite um email válido');
-                }
-              }}
-              placeholder="seu@email.com"
-              required
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <div className="form-group">
+              <label htmlFor="email">email</label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  e.target.setCustomValidity('');
+                }}
+                onInvalid={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  if (target.validity.valueMissing) {
+                    target.setCustomValidity('preencha o email');
+                  } else if (target.validity.typeMismatch) {
+                    target.setCustomValidity('digite um email válido');
+                  }
+                }}
+                placeholder="seu@email.com"
+                required
+                disabled={loading}
+              />
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="senha">senha</label>
+              <input
+                id="senha"
+                type="password"
+                value={senha}
+                onChange={(e) => {
+                  setSenha(e.target.value);
+                  e.target.setCustomValidity('');
+                }}
+                onInvalid={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  if (target.validity.valueMissing) {
+                    target.setCustomValidity('preencha a senha');
+                  }
+                }}
+                placeholder="mínimo 8 caracteres"
+                required
+                disabled={loading}
+              />
+              <small style={{ fontSize: '0.85rem', color: '#666', display: 'block', marginTop: '4px' }}>
+                • mínimo 8 caracteres<br />
+                • 1 maiúscula, 1 minúscula, 1 número, 1 caractere especial
+              </small>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="confirmarSenha">confirmar senha</label>
+              <input
+                id="confirmarSenha"
+                type="password"
+                value={confirmarSenha}
+                onChange={(e) => {
+                  setConfirmarSenha(e.target.value);
+                  e.target.setCustomValidity('');
+                }}
+                onInvalid={(e) => {
+                  const target = e.target as HTMLInputElement;
+                  if (target.validity.valueMissing) {
+                    target.setCustomValidity('preencha a confirmação de senha');
+                  }
+                }}
+                placeholder="repita sua senha"
+                required
+                disabled={loading}
+              />
+            </div>
+
+            {erro && <div className="error-message">{erro}</div>}
+
+            <button
+              type="submit"
+              className="primary"
               disabled={loading}
-            />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="senha">senha</label>
-            <input
-              id="senha"
-              type="password"
-              value={senha}
-              onChange={(e) => {
-                setSenha(e.target.value);
-                e.target.setCustomValidity('');
-              }}
-              onInvalid={(e) => {
-                const target = e.target as HTMLInputElement;
-                if (target.validity.valueMissing) {
-                  target.setCustomValidity('preencha a senha');
-                }
-              }}
-              placeholder="mínimo 8 caracteres"
-              required
-              disabled={loading}
-            />
-            <small style={{ fontSize: '0.85rem', color: '#666', display: 'block', marginTop: '4px' }}>
-              • mínimo 8 caracteres<br />
-              • 1 maiúscula, 1 minúscula, 1 número, 1 caractere especial
-            </small>
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="confirmarSenha">confirmar senha</label>
-            <input
-              id="confirmarSenha"
-              type="password"
-              value={confirmarSenha}
-              onChange={(e) => {
-                setConfirmarSenha(e.target.value);
-                e.target.setCustomValidity('');
-              }}
-              onInvalid={(e) => {
-                const target = e.target as HTMLInputElement;
-                if (target.validity.valueMissing) {
-                  target.setCustomValidity('preencha a confirmação de senha');
-                }
-              }}
-              placeholder="repita sua senha"
-              required
-              disabled={loading}
-            />
-          </div>
-
-          {erro && <div className="error-message">{erro}</div>}
-
-          <button 
-            type="submit" 
-            className="primary" 
-            disabled={loading || loadingGoogle}
-            style={{ width: '100%', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
-          >
-            {loading && <div className="loading-small"></div>}
-            {loading ? 'criando conta...' : 'cadastrar'}
-          </button>
-        </form>
+              style={{ width: '100%', marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}
+            >
+              {loading && <div className="loading-small"></div>}
+              {loading ? 'criando conta...' : 'cadastrar'}
+            </button>
+          </form>
 
 
           <p className={styles.loginLink}>
@@ -302,7 +223,7 @@ export default function Cadastro() {
             <button className={styles.closeButton} onClick={() => setMostrarErro(false)}>×</button>
             <h2 className={styles.popupTitle}>erro ao cadastrar</h2>
             <p className={styles.popupText}>{mensagemErro}</p>
-            <button 
+            <button
               onClick={() => setMostrarErro(false)}
               className="primary"
               style={{ width: '100%', marginTop: '16px' }}
@@ -326,7 +247,7 @@ export default function Cadastro() {
             <p className={styles.popupText}>
               verifique sua caixa de entrada e clique no link para ativar sua conta.
             </p>
-            <button 
+            <button
               onClick={fecharPopup}
               className="primary"
               style={{ width: '100%', marginTop: '16px' }}
@@ -337,27 +258,7 @@ export default function Cadastro() {
         </div>
       )}
 
-      {/* Popup de Email Já Cadastrado */}
-      {mostrarPopupEmailExistente && (
-        <div className={styles.popupOverlay}>
-          <div className={styles.popup} onClick={(e) => e.stopPropagation()}>
-            <h2 className={styles.popupTitle}>email já cadastrado</h2>
-            <p className={styles.popupText}>
-              esse email já foi cadastrado em nossa plataforma.
-            </p>
-            <p className={styles.popupText}>
-              você será redirecionado para a tela inicial já autenticado.
-            </p>
-            <button 
-              onClick={() => router.push('/')}
-              className="primary"
-              style={{ width: '100%', marginTop: '16px' }}
-            >
-              ir para tela inicial
-            </button>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }
