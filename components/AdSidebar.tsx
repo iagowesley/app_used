@@ -10,7 +10,7 @@ const AdSidebar: React.FC<AdSidebarProps> = ({ side }) => {
         <div className={`${styles.sidebar} ${styles[side]}`}>
             <div className={styles.adContent}>
                 <p className={styles.adText}>
-                    ANUNCIE AQUI SEU SERVIÇO, SUA LOJA, PRODUTO ETC
+                    ANUNCIE AQUI SEU SERVIÇO, SUA LOJA OU PRODUTO!
                 </p>
             </div>
         </div>

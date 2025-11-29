@@ -101,7 +101,7 @@ export default function PoliticaPrivacidade() {
                     <h2>9. contato</h2>
                     <p>
                         para questões sobre esta política de privacidade ou sobre seus dados pessoais,
-                        entre em contato conosco através do e-mail: privacidade@used.com.br
+                        entre em contato conosco através do e-mail: suporte@used.com.br
                     </p>
                 </section>
             </div>

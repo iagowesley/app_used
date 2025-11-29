@@ -210,7 +210,7 @@ export default function Home() {
               </div>
               <h3 className={styles.stepTitle}>negocie direto</h3>
               <p className={styles.stepDescription}>
-                converse pelo chat e combine a entrega com o comprador.
+                converse pelo whatsapp e combine a entrega com o comprador.
               </p>
             </div>
           </div>
