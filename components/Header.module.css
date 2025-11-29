@@ -57,6 +57,45 @@
   align-items: center;
 }
 
+.btnComoFunciona {
+  color: var(--color-text);
+  padding: 14px 20px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  text-transform: lowercase;
+  border-radius: var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnComoFunciona:hover {
+  background-color: #f8f9fa;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.btnIcon {
+  display: none;
+  font-size: 14px;
+  font-weight: 700;
+  width: 20px;
+  height: 20px;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #6c757d;
+  color: #6c757d;
+  border-radius: 50%;
+}
+
+@media (max-width: 768px) {
+  .btnComoFunciona {
+    display: none;
+  }
+}
+
 .btnAdmin {
   background-color: #9ca3af;
   color: white;
@@ -100,7 +139,6 @@
   cursor: pointer;
 }
 
-.btnLogin,
 .btnCadastro {
   padding: 14px 28px;
   border-radius: var(--border-radius);
@@ -112,6 +150,19 @@
 
 .btnLogin {
   color: var(--color-text);
+  padding: 14px 28px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  font-size: 16px;
+  text-transform: lowercase;
+  border-radius: var(--border-radius);
+}
+
+.btnLogin:hover {
+  background-color: #f8f9fa;
+  color: var(--color-accent);
+  text-decoration: none;
 }
 
 .btnCadastro {

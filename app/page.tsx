@@ -166,6 +166,63 @@ export default function Home() {
         </div>
       </div>
 
+      {/* Seção Como Funciona */}
+      <div id="como-funciona" className={styles.comoFuncionaSection}>
+        <div className="container">
+          <div className={styles.comoFuncionaHeader}>
+            <h2 className={styles.sectionTitle}>como funciona</h2>
+            <p className={styles.sectionSubtitle}>
+              vender e comprar na used é simples e rápido
+            </p>
+          </div>
+
+          <div className={styles.stepsContainer}>
+            <div className={styles.stepItem}>
+              <div className={styles.stepIconWrapper}>
+                <span className={styles.stepNumber}>1</span>
+                <img src="/profile.png" alt="cadastro" className={styles.stepIcon} />
+              </div>
+              <h3 className={styles.stepTitle}>crie sua conta</h3>
+              <p className={styles.stepDescription}>
+                faça seu cadastro gratuito em segundos. é rápido e seguro.
+              </p>
+            </div>
+
+            <div className={styles.connectorLine}></div>
+
+            <div className={styles.stepItem}>
+              <div className={styles.stepIconWrapper}>
+                <span className={styles.stepNumber}>2</span>
+                <img src="/bolsa-de-dinheiro.png" alt="anuncie" className={styles.stepIcon} />
+              </div>
+              <h3 className={styles.stepTitle}>anuncie grátis</h3>
+              <p className={styles.stepDescription}>
+                tire fotos, descreva seu produto e defina o preço. pronto!
+              </p>
+            </div>
+
+            <div className={styles.connectorLine}></div>
+
+            <div className={styles.stepItem}>
+              <div className={styles.stepIconWrapper}>
+                <span className={styles.stepNumber}>3</span>
+                <img src="/direto.png" alt="negocie" className={styles.stepIcon} />
+              </div>
+              <h3 className={styles.stepTitle}>negocie direto</h3>
+              <p className={styles.stepDescription}>
+                converse pelo chat e combine a entrega com o comprador.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.ctaContainer}>
+            <a href="/novo-anuncio" className={styles.sectionCTA}>
+              anunciar agora
+            </a>
+          </div>
+        </div>
+      </div>
+
       <div className={styles.mainLayout}>
         <div className={styles.sidebarLeft}>
           <AdSidebar side="left" />

@@ -86,6 +86,14 @@ export default function Header() {
     router.push('/');
   };
 
+  const handleScrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
+    e.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <header className={`${styles.header} ${isScrolled ? styles.headerScrolled : ''}`}>
       <div className={styles.container}>
@@ -95,6 +103,15 @@ export default function Header() {
         </Link>
 
         <nav className={styles.nav}>
+          <a
+            href="#como-funciona"
+            onClick={(e) => handleScrollToSection(e, 'como-funciona')}
+            className={styles.btnComoFunciona}
+            aria-label="como funciona"
+          >
+            <span className={styles.btnText}>como funciona</span>
+            <span className={styles.btnIcon}>?</span>
+          </a>
           {user ? (
             <>
               {isAdmin && (
