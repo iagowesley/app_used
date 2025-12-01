@@ -22,6 +22,7 @@ export default function Login() {
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [redefinindo, setRedefinindo] = useState(false);
   const [senhaRedefinida, setSenhaRedefinida] = useState(false);
+  const [emailConfirmado, setEmailConfirmado] = useState(false);
 
   const router = useRouter();
 
@@ -36,6 +37,25 @@ export default function Login() {
       const hash = window.location.hash;
       const urlParams = new URLSearchParams(window.location.search);
       const reset = urlParams.get('reset');
+      const confirmed = urlParams.get('confirmed');
+      const error = urlParams.get('error');
+
+      // Verificar se é confirmação de email
+      if (confirmed === 'true') {
+        setEmailConfirmado(true);
+        // Limpar URL
+        window.history.replaceState({}, '', '/login');
+        setCheckingAuth(false);
+        return;
+      }
+
+      // Verificar se houve erro no callback
+      if (error === 'invalid_link') {
+        setErro('link inválido ou expirado. solicite um novo link.');
+        window.history.replaceState({}, '', '/login');
+        setCheckingAuth(false);
+        return;
+      }
 
       // Verificar se há token de recuperação no hash (Supabase usa #access_token=...&type=recovery)
       const hasResetToken = hash.length > 0 && hash.includes('access_token') && hash.includes('type=recovery');
@@ -492,6 +512,31 @@ export default function Login() {
             className={styles.linkButton}
           >
             voltar para login
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Se email foi confirmado com sucesso
+  if (emailConfirmado) {
+    return (
+      <div className={styles.container}>
+        <div className={styles.standaloneFormCard}>
+          <div className={styles.popupIcon}>✓</div>
+          <h1 className={styles.title}>email confirmado!</h1>
+          <p className={styles.subtitle}>
+            sua conta foi ativada com sucesso
+          </p>
+          <p className={styles.instructionText}>
+            agora você pode fazer login com suas credenciais
+          </p>
+          <button
+            onClick={() => setEmailConfirmado(false)}
+            className="primary"
+            style={{ width: '100%', marginTop: '24px' }}
+          >
+            fazer login
           </button>
         </div>
       </div>
