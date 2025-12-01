@@ -45,11 +45,11 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className={styles.footerBottom}>
-          <p className={styles.copyright}>
-            © {new Date().getFullYear()} used. todos os direitos reservados.
-          </p>
-        </div>
+      </div>
+      <div className={styles.footerBottom}>
+        <p className={styles.copyright}>
+          © {new Date().getFullYear()} used. todos os direitos reservados.
+        </p>
       </div>
     </footer>
   );

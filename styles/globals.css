@@ -53,7 +53,8 @@ button.secondary {
 }
 
 /* Inputs */
-input, textarea {
+input,
+textarea {
   width: 100%;
   padding: 12px 8px;
   border: none;
@@ -67,12 +68,14 @@ input, textarea {
   background-color: transparent;
 }
 
-input:focus, textarea:focus {
+input:focus,
+textarea:focus {
   outline: none;
   border-bottom-color: var(--color-accent);
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: var(--color-text-light);
   opacity: 1;
 }
@@ -122,7 +125,7 @@ a:hover {
   grid-auto-rows: 1fr;
 }
 
-.products-grid > * {
+.products-grid>* {
   display: flex;
   min-height: 0;
 }
@@ -189,6 +192,11 @@ a:hover {
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
