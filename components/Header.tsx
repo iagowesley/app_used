@@ -103,15 +103,25 @@ export default function Header() {
         </Link>
 
         <nav className={styles.nav}>
-          <a
-            href="#como-funciona"
-            onClick={(e) => handleScrollToSection(e, 'como-funciona')}
+          <button
+            onClick={() => {
+              // Se já estiver na home, só fazer scroll
+              if (window.location.pathname === '/') {
+                const element = document.getElementById('como-funciona');
+                if (element) {
+                  element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+              } else {
+                // Se estiver em outra página, redirecionar e depois fazer scroll
+                router.push('/#como-funciona');
+              }
+            }}
             className={styles.btnComoFunciona}
             aria-label="como funciona"
           >
             <span className={styles.btnText}>como funciona</span>
             <span className={styles.btnIcon}>?</span>
-          </a>
+          </button>
           {user ? (
             <>
               {isAdmin && (

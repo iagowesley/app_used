@@ -35,6 +35,17 @@ export default function Home() {
       window.location.href = `/login?reset=true${hash}`;
       return;
     }
+
+    // Se há hash #como-funciona, fazer scroll para a seção
+    if (hash === '#como-funciona') {
+      // Esperar um pouco para garantir que o DOM está pronto
+      setTimeout(() => {
+        const element = document.getElementById('como-funciona');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
   }, []);
 
   useEffect(() => {

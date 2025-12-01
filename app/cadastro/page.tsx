@@ -68,8 +68,13 @@ export default function Cadastro() {
       });
 
       if (error) {
-        // Verificar se é email duplicado
-        if (error.message.includes('already') || error.message.includes('exists')) {
+        // Verificar se é email duplicado - Supabase pode retornar diferentes mensagens
+        const errorMsg = error.message.toLowerCase();
+        if (errorMsg.includes('already') ||
+          errorMsg.includes('exists') ||
+          errorMsg.includes('registered') ||
+          errorMsg.includes('duplicate') ||
+          error.status === 422) {
           setMensagemErro('este email já está cadastrado. faça login ou use outro email.');
           setMostrarErro(true);
           return;
@@ -77,13 +82,16 @@ export default function Cadastro() {
         throw error;
       }
 
-      // Verificar se o usuário já existe
-      if (data.user && !data.session) {
+      // Caso especial: quando email já existe mas Supabase não retorna erro
+      // Ele retorna data.user mas com identities vazio
+      if (data.user && data.user.identities && data.user.identities.length === 0) {
         setMensagemErro('este email já está cadastrado. faça login ou use outro email.');
         setMostrarErro(true);
         return;
       }
 
+      // Quando email confirmation está habilitado, o Supabase retorna data.user mas NÃO data.session
+      // A sessão só é criada após confirmar o email
       if (data.user) {
         setMostrarPopup(true);
       }
