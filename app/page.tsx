@@ -26,7 +26,8 @@ export default function Home() {
 
     const hash = window.location.hash;
     // Verificar se há hash fragments de reset (Supabase usa #access_token=...&type=recovery)
-    const hasResetToken = hash.length > 0 && (hash.includes('access_token') || hash.includes('recovery') || hash.includes('type=recovery'));
+    // IMPORTANTE: Verificar explicitamente por type=recovery para não confundir com confirmação de email (type=signup)
+    const hasResetToken = hash.length > 0 && hash.includes('access_token') && hash.includes('type=recovery');
 
     if (hasResetToken) {
       // Redirecionar imediatamente para a página de login com reset=true
